@@ -6,16 +6,14 @@ import math
 output_file="downstream"
 cm=10.0
 
-# global coordinate of coil center
-x_origin=0
-z_origin=0
+
 
 # segment 1
 s1_x=(17.25-14.5)*cm         # extent along x
 s1_y=2*cm                    # extent along y
 s1_l_arm=(1100-1000)*cm  # length of arms
 s1_rad=(17.25-4)/2*cm     # arc rad of nose  
-s1_theta=math.pi/4 ##math.atan((20.0-17.25)*cm/s1_l_arm)     # slant angle of upper arm
+s1_theta=math.atan((20.0-17.25)*cm/s1_l_arm)     # slant angle of upper arm
 
 
 
@@ -71,6 +69,11 @@ s4_theta_up5= math.atan((40-32.5)*cm/s4_l_arm_up5)
 s4_rad_end_up=s4_rad-s4_h_arm_up3+s4_x+ s4_l_arm_up1*math.tan(s4_theta_up1)+ s4_l_arm_up2*math.tan(s4_theta_up2)+s4_l_arm_up4*math.tan(s4_theta_up4)+s4_l_arm_up5*math.tan(s4_theta_up5)
 s4_rad_end_low=-s4_rad+(s4_l_arm_low2)*math.tan(s4_theta_low1)+(s4_l_arm_low3)*math.tan(s4_theta_low3)-(s4_l_arm_low4)*math.tan(s4_theta_low4)
 s4_rad_end=(s4_rad_end_up-s4_rad_end_low)/2
+
+h_single_coil=(40-4)*cm
+l_single_coil=(s1_rad+s1_l_arm+s2_l_arm+s3_l_arm+s4_l_arm_up1+s4_l_arm_up2+s4_l_arm_up3+s4_l_arm_up4+s4_l_arm_up5+s4_rad_end)
+x_origin=s1_rad-h_single_coil/2
+z_origin= s1_rad-l_single_coil/2
 
 print(str(s1_x)+" "+str(s2_x)+" "+str(s3_x)+" "+ str(s4_x)+" "+str(s4_l_arm_up3)+" "+str(s4_rad_up3))
 f=open(output_file+".gdml", "w+")
@@ -149,7 +152,7 @@ f.write("\t<union name=\"solid_s1_s2_s3\">\n\t\t<first ref=\"solid_s1_s2\"/>\n\t
 f.write("\t<union name=\"solid_s1_s2_s3_s4\">\n\t\t<first ref=\"solid_s1_s2_s3\"/>\n\t\t<second ref=\"solid_s4\"/>\n\t\t<position name=\"pos_s1_s2_s3_s4\" x=\""+str(s1_l_arm/2*math.tan(s1_theta)+s2_l_arm/2*math.tan(s2_theta)+s3_l_arm/2*math.tan(s3_theta)+s4_l_arm_low1/2*math.tan(s4_theta_low1))+"\" y=\""+str(-s1_l_arm-s2_l_arm-s3_l_arm)+"\" z=\""+str((s4_y_mid+s4_y_tb)/2)+"\"/>\n\t\t<rotation name=\"rot_s1_s2_s3_s4\" x=\"0\" y=\"0\" z=\"0\"/>\n\t</union>\n")
 
 
-f.write("\t<box name=\"solid_dcoil\" lunit=\"mm\" x=\""+str(800)+"\" y=\""+str(60)+"\" z=\""+str(6000)+"\"/>\n")
+f.write("\t<box name=\"solid_dcoil\" lunit=\"mm\" x=\""+str(h_single_coil+2)+"\" y=\""+str(s4_y+2)+"\" z=\""+str(l_single_coil+2)+"\"/>\n")
 f.write("\t<tube name=\"solid_DS_toroidMother\" rmin=\""+str(0)+"\"  rmax=\""+str(1000)+"\" z=\""+str(8000)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n")
 f.write("</solids>\n")
 
@@ -157,11 +160,11 @@ f.write("</solids>\n")
 
 f.write("\n\n<structure>\n")
 
-for i in range(0,1):
+for i in range(0,7):
 	f.write("\t<volume name=\"logic_s1_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Cu\"/>\n\t\t<solidref ref=\"solid_s1_s2_s3_s4\"/>\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"red\"/>\n\t</volume>\n")
         
 	f.write("\t<volume name=\"logic_dcoil_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Galactic\"/>\n\t\t<solidref ref=\"solid_dcoil\"/>\n")
-        f.write("\t\t<physvol name=\"s1_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_s1_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_s1_"+str(i)+"\" x=\""+str(0)+"\" y=\""+str(0)+"\" z=\"0\"/>\n\t\t\t<rotation name=\"rot_s1_"+str(i)+"\" x=\"pi/2\" y=\"0\" z=\""+str(0)+"\"/>\n\t\t</physvol>\n")
+        f.write("\t\t<physvol name=\"s1_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_s1_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_s1_"+str(i)+"\" x=\""+str(x_origin)+"\" y=\""+str(0)+"\" z=\""+str(z_origin)+"\"/>\n\t\t\t<rotation name=\"rot_s1_"+str(i)+"\" x=\"pi/2\" y=\"0\" z=\""+str(0)+"\"/>\n\t\t</physvol>\n")
 	f.write("\t</volume>\n")
 
 

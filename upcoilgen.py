@@ -7,11 +7,17 @@ output_file="upstream"
 cm=10
 
 
-x=4.87*cm
-y=1.01*cm
-length_straight=(789.14-610.84)*cm
-radius=(19.88-7.79)/2*cm    
-pos=7.79*cm+radius
+s_x=4.866*cm
+s_y=1.01*cm
+s_l_arm=math.sqrt(math.pow((25.210-24.751),2)+math.pow((789.132-610.832),2))*cm
+s_rad=(6.044+4.866)*cm    
+s_theta= math.atan((25.210-24.751)/(789.132-610.832))
+len_ucoil=2*s_rad+s_l_arm
+z_origin=s_rad-len_ucoil/2
+
+
+pos=2.928*cm+math.sqrt(math.pow(s_rad,2)+math.pow(s_l_arm/2,2))*math.sin(math.atan(2*s_rad/s_l_arm)+s_theta)
+#theta=math.atan(()/)
 
 f=open(output_file+".gdml", "w+")
 
@@ -22,43 +28,42 @@ f.write("\n\n<define>\n</define>")
 
 
 f.write("\n\n<solids>\n")
-f.write("\t<box name=\"solid_lowerStraightSegment\" lunit=\"mm\" x=\""+str(x)+"\" y=\""+str(y)+"\" z=\""+str(length_straight)+"\"/>\n")
-f.write("\t<box name=\"solid_upperStraightSegment\" lunit=\"mm\" x=\""+str(x)+"\" y=\""+str(y)+"\" z=\""+str(length_straight)+"\"/>\n")
-f.write("\t<tube name=\"solid_frontNose\" rmin=\""+str(radius)+"\"  rmax=\""+str(radius+x)+"\" z=\""+str(y)+"\" startphi=\"0\" deltaphi=\"180\" aunit=\"deg\" lunit=\"mm\"/>\n")
-f.write("\t<tube name=\"solid_endNose\" rmin=\""+str(radius)+"\"  rmax=\""+str(radius+x)+"\" z=\""+str(y)+"\" startphi=\"0\" deltaphi=\"180\" aunit=\"deg\" lunit=\"mm\"/>\n")
-f.write("\t<box name=\"solid_ucoil\" lunit=\"mm\" x=\""+str(2*x+2*radius)+"\" y=\""+str(y)+"\" z=\""+str(length_straight+2*radius+2*x)+"\"/>\n")
+f.write("\t<box name=\"solid_s_arm_low\" lunit=\"mm\" x=\""+str(s_x)+"\" y=\""+str(s_y)+"\" z=\""+str(s_l_arm)+"\"/>\n")
+f.write("\t<box name=\"solid_s_arm_up\" lunit=\"mm\" x=\""+str(s_x)+"\" y=\""+str(s_y)+"\" z=\""+str(s_l_arm)+"\"/>\n")
+f.write("\t<tube name=\"solid_s_frontNose\" rmin=\""+str(s_rad-s_x)+"\"  rmax=\""+str(s_rad)+"\" z=\""+str(s_y)+"\" startphi=\"0\" deltaphi=\"pi\" aunit=\"rad\" lunit=\"mm\"/>\n")
+f.write("\t<tube name=\"solid_s_endNose\" rmin=\""+str(s_rad-s_x)+"\"  rmax=\""+str(s_rad)+"\" z=\""+str(s_y)+"\" startphi=\"0\" deltaphi=\"pi\" aunit=\"rad\" lunit=\"mm\"/>\n")
+f.write("\t<box name=\"solid_ucoil\" lunit=\"mm\" x=\""+str(2*s_rad)+"\" y=\""+str(s_y)+"\" z=\""+str(len_ucoil)+"\"/>\n")
 
 
-f.write("\t<tube name=\"solid_upstreamToroidMother\" rmin=\""+str(pos-x-radius-1)+"\"  rmax=\""+str(pos+x+radius+1)+"\" z=\""+str(length_straight+2*radius+2*x+1)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n")
+f.write("\t<union name=\"solid_s_1\">\n\t\t<first ref=\"solid_s_frontNose\"/>\n\t\t<second ref=\"solid_s_arm_up\"/>\n\t\t<position name=\"pos_s_1\" x=\""+str(s_rad-s_x/2)+"\" y=\""+str(-s_l_arm/2)+"\" z=\"0\"/>\n\t\t<rotation name=\"rot_s_1\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t</union>\n")
+f.write("\t<union name=\"solid_s_2\">\n\t\t<first ref=\"solid_s_1\"/>\n\t\t<second ref=\"solid_s_arm_low\"/>\n\t\t<position name=\"pos_s_2\" x=\""+str(-s_rad+s_x/2)+"\" y=\""+str(-s_l_arm/2)+"\" z=\"0\"/>\n\t\t<rotation name=\"rot_s_2\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t</union>\n")
+f.write("\t<union name=\"solid_s\">\n\t\t<first ref=\"solid_s_2\"/>\n\t\t<second ref=\"solid_s_endNose\"/>\n\t\t<position name=\"pos_s_2\" x=\""+str(0)+"\" y=\""+str(-s_l_arm)+"\" z=\"0\"/>\n\t\t<rotation name=\"rot_s_2\" x=\"-pi\" y=\"0\" z=\"0\"/>\n\t</union>\n")
+
+
+
+f.write("\t<tube name=\"solid_upstreamToroidMother\" rmin=\""+str(pos-s_rad-1)+"\"  rmax=\""+str(pos+s_rad+1)+"\" z=\""+str(s_l_arm+2*s_rad+1)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n")
 f.write("</solids>\n")
 
 
 
 f.write("\n\n<structure>\n")
 
-for i in range(0,7):
-	f.write("\t<volume name=\"logic_upperStraightSegment_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Cu\"/>\n\t\t<solidref ref=\"solid_upperStraightSegment\"/>\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"red\"/>\n\t</volume>\n")
-	f.write("\t<volume name=\"logic_lowerStraightSegment_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Cu\"/>\n\t\t<solidref ref=\"solid_lowerStraightSegment\"/>\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"red\"/>\n\t</volume>\n")
-	f.write("\t<volume name=\"logic_frontNose_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Cu\"/>\n\t\t<solidref ref=\"solid_frontNose\"/>\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"red\"/>\n\t</volume>\n")
-	f.write("\t<volume name=\"logic_endNose_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Cu\"/>\n\t\t<solidref ref=\"solid_endNose\"/>\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"red\"/>\n\t</volume>\n")
-
+for i in range(0,1):
+	f.write("\t<volume name=\"logic_s_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Cu\"/>\n\t\t<solidref ref=\"solid_s\"/>\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"red\"/>\n\t</volume>\n")
 
 	f.write("\t<volume name=\"logic_ucoil_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Galactic\"/>\n\t\t<solidref ref=\"solid_ucoil\"/>\n")
-	f.write("\t\t<physvol name=\"upperStraightSegment_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_upperStraightSegment_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_upperStraightSegment_"+str(i)+"\" x=\""+str(radius+x/2)+"\" y=\"0\" z=\"0\"/>\n\t\t</physvol>\n")
-	f.write("\t\t<physvol name=\"lowerStraightSegment_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_lowerStraightSegment_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_lowerStraightSegment_"+str(i)+"\" x=\""+str(-radius-x/2)+"\" y=\"0\" z=\"0\"/>\n\t\t</physvol>\n")
-	f.write("\t\t<physvol name=\"frontNose_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_frontNose_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_frontNose_"+str(i)+"\" x=\"0\" y=\"0\" z=\""+str(-length_straight/2)+"\"/>\n\t\t\t<rotation name=\"rot_frontNose_"+str(i)+"\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t\t</physvol>\n")
-	f.write("\t\t<physvol name=\"endNose_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_endNose_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_endNose_"+str(i)+"\" x=\"0\" y=\"0\" z=\""+str(length_straight/2)+"\"/>\n\t\t\t<rotation name=\"rot_endNose_"+str(i)+"\" x=\"-pi/2\" y=\"0\" z=\"0\"/>\n\t\t</physvol>\n")
+	f.write("\t\t<physvol name=\"s_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_s_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_s_arm_up_"+str(i)+"\" x=\""+str(0)+"\" y=\"0\" z=\""+str(z_origin)+"\"/>\n\t\t<rotation name=\"rot_s_arm_up_"+str(i)+"\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t\t</physvol>\n")
 	f.write("\t</volume>\n")
 
 
 f.write("\t<volume name=\"upstreamToroidMother\">\n\t\t<materialref ref=\"G4_Galactic\"/>\n\t\t<solidref ref=\"solid_upstreamToroidMother\"/>\n")
 
-for i in range(0,7):
+for i in range(0,1):
         rpos=pos
         theta=2*i*math.pi/7
         xpos=rpos*(math.cos(theta))
         ypos=rpos*(math.sin(theta)) 
-	f.write("\t\t<physvol name=\"ucoil_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_ucoil_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_ucoil_"+str(i)+"\" x=\""+str(xpos)+"\" y=\""+str(ypos)+"\" z=\"0\"/>\n\t\t\t<rotation name=\"rot_ucoil_"+str(i)+"\" x=\"0\" y=\"0\" z=\""+str(-theta)+"\"/>\n\t\t</physvol>\n")
+	f.write("\t\t<physvol name=\"ucoil_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_ucoil_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_ucoil_"+str(i)+"\" x=\""+str(xpos)+"\" y=\""+str(ypos)+"\" z=\"0\"/>\n\t\t\t<rotation name=\"rot_ucoil_"+str(i)+"\" x=\"0\" y=\""+str(-s_theta)+"\" z=\""+str(-theta)+"\"/>\n\t\t</physvol>\n")
 f.write("\t</volume>\n")
 
 f.write("</structure>\n")
@@ -71,9 +76,9 @@ f.write("</gdml>")
 
 
 """
-    <physvol name="lowerStraightSegment">
-      <volumeref ref="logic_lowerStraightSegment"/>
-      <position name="pos_lowerStraightSegment" x="-60-10" y="0" z="0"/>
+    <physvol name="s_arm_low">
+      <volumeref ref="logic_s_arm_low"/>
+      <position name="pos_s_arm_low" x="-60-10" y="0" z="0"/>
     </physvol>
 
     <physvol name="frontNose">
@@ -92,21 +97,21 @@ f.write("</gdml>")
 """
 
 """
-  <volume name="logic_lowerStraightSegment">
+  <volume name="logic_s_arm_low">
     <materialref ref="G4_Cu"/>
-    <solidref ref="solid_lowerStraightSegment"/>
+    <solidref ref="solid_s_arm_low"/>
     <auxiliary auxtype="Color" auxvalue="red"/>
   </volume>
 
   <volume name="logic_frontNose">
     <materialref ref="G4_Cu"/>
-    <solidref ref="solid_frontNose"/>
+    <solidref ref="solid_s_frontNose"/>
     <auxiliary auxtype="Color" auxvalue="blue"/>
   </volume>
 
   <volume name="logic_endNose">
     <materialref ref="G4_Cu"/>
-    <solidref ref="solid_frontNose"/>
+    <solidref ref="solid_s_frontNose"/>
     <auxiliary auxtype="Color" auxvalue="blue"/>
   </volume>
 """

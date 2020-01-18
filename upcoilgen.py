@@ -37,11 +37,11 @@ f.write("\t<box name=\"solid_ucoil\" lunit=\"mm\" x=\""+str(2*s_rad)+"\" y=\""+s
 
 f.write("\t<union name=\"solid_s_1\">\n\t\t<first ref=\"solid_s_frontNose\"/>\n\t\t<second ref=\"solid_s_arm_up\"/>\n\t\t<position name=\"pos_s_1\" x=\""+str(s_rad-s_x/2)+"\" y=\""+str(-s_l_arm/2)+"\" z=\"0\"/>\n\t\t<rotation name=\"rot_s_1\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t</union>\n")
 f.write("\t<union name=\"solid_s_2\">\n\t\t<first ref=\"solid_s_1\"/>\n\t\t<second ref=\"solid_s_arm_low\"/>\n\t\t<position name=\"pos_s_2\" x=\""+str(-s_rad+s_x/2)+"\" y=\""+str(-s_l_arm/2)+"\" z=\"0\"/>\n\t\t<rotation name=\"rot_s_2\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t</union>\n")
-f.write("\t<union name=\"solid_s\">\n\t\t<first ref=\"solid_s_2\"/>\n\t\t<second ref=\"solid_s_endNose\"/>\n\t\t<position name=\"pos_s_2\" x=\""+str(0)+"\" y=\""+str(-s_l_arm)+"\" z=\"0\"/>\n\t\t<rotation name=\"rot_s_2\" x=\"-pi\" y=\"0\" z=\"0\"/>\n\t</union>\n")
+f.write("\t<union name=\"solid_s\">\n\t\t<first ref=\"solid_s_2\"/>\n\t\t<second ref=\"solid_s_endNose\"/>\n\t\t<position name=\"pos_s_3\" x=\""+str(0)+"\" y=\""+str(-s_l_arm)+"\" z=\"0\"/>\n\t\t<rotation name=\"rot_s_3\" x=\"-pi\" y=\"0\" z=\"0\"/>\n\t</union>\n")
 
 
 
-f.write("\t<tube name=\"solid_upstreamToroidMother\" rmin=\""+str(pos-s_rad-1)+"\"  rmax=\""+str(pos+s_rad+1)+"\" z=\""+str(s_l_arm+2*s_rad+1)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n")
+f.write("\t<cone name=\"solid_upstreamToroidMother\" rmin1=\""+str(29.28-0.5)+"\"  rmax1=\""+str(252.10+0.5)+"\" rmin2=\""+str(33.87-0.5)+"\" rmax2=\""+str(252.10+0.5)+"\"  z=\""+str(s_l_arm+2*s_rad+1)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n") #Make sure this mother volume doesn't interfere with coils
 f.write("</solids>\n")
 
 
@@ -52,7 +52,7 @@ for i in range(0,1):
 	f.write("\t<volume name=\"logic_s_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Cu\"/>\n\t\t<solidref ref=\"solid_s\"/>\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"red\"/>\n\t</volume>\n")
 
 	f.write("\t<volume name=\"logic_ucoil_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Galactic\"/>\n\t\t<solidref ref=\"solid_ucoil\"/>\n")
-	f.write("\t\t<physvol name=\"s_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_s_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_s_arm_up_"+str(i)+"\" x=\""+str(0)+"\" y=\"0\" z=\""+str(z_origin)+"\"/>\n\t\t<rotation name=\"rot_s_arm_up_"+str(i)+"\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t\t</physvol>\n")
+	f.write("\t\t<physvol name=\"s_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_s_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_s_"+str(i)+"\" x=\""+str(0)+"\" y=\"0\" z=\""+str(z_origin)+"\"/>\n\t\t\t<rotation name=\"rot_s_"+str(i)+"\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t\t</physvol>\n")
 	f.write("\t</volume>\n")
 
 

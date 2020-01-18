@@ -74,7 +74,7 @@ z_origin= s1_rad-l_single_coil/2
 
 pos=4*cm+h_single_coil/2
 
-r_inner_mother=pos-h_single_coil/2-10
+r_inner_mother=pos-h_single_coil/2
 r_outer_mother=pos+h_single_coil/2+10
 l_mother=l_single_coil
 

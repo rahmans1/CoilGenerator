@@ -18,28 +18,26 @@ s1_theta=math.atan((20.0-17.25)*cm/s1_l_arm)     # slant angle of upper arm
 
 
 # segment 2
-s2_x=(17.25-15.8)*cm 
+s2_x=(17.25-15.9)*cm 
 s2_y=2*cm 
 s2_l_arm=(1200-1100)*cm # length of arms
 s2_rad=(s1_rad-s1_x+s1_l_arm/2*math.tan(s1_theta)) # arc rad of nose
-s2_theta=math.atan((22.6-17.25)*cm/s2_l_arm)
+s2_theta=math.atan((25.45-20)*cm/s2_l_arm)
 
 # segment 3
 s3_x=(21.4-18.65)*cm
 s3_y=2*cm
 s3_l_arm=(1300-1200)*cm
 s3_rad=(s2_rad-s2_x+s2_l_arm/2*math.tan(s2_theta))
-#s3_xpos=0*cm
-#s3_zpos=0*cm
-s3_theta=math.atan((24.9-21.3)*cm/s3_l_arm)
+s3_theta=math.atan((29.1-25.45)*cm/s3_l_arm)
 
 # segment 4
 s4_x=s1_x+s2_x+s3_x    # is this correct?
 s4_y_tb=1*cm           # thickness of top and bottom pancake
 s4_y_mid=2*cm          # thickness of middle pancake
 s4_y=2*s4_y_tb+s4_y_mid    # total thickness of segment 4 
-s4_l_arm_low1= (1400-1300)*cm    # length of low1. low1 is bottom arm adjacent to nose.
-s4_l_arm_low2= (1480-1400)*cm    # length of low2
+s4_l_arm_low1= (1404-1300)*cm    # length of low1. low1 is bottom arm adjacent to nose.
+s4_l_arm_low2= (1480-1404)*cm    # length of low2
 s4_theta_low1=math.atan((6.4-4)*cm/s4_l_arm_low1)   #angle of rise of low1.
 s4_l_arm_low3= (1656-1480)*cm  # length of low3.
 s4_theta_low3= math.atan((25.8-14.8)*cm/s4_l_arm_low3) 
@@ -64,7 +62,7 @@ s4_l_arm_up4= (1656-1476)*cm
 s4_theta_up4= math.atan((32.5-20.8)*cm/s4_l_arm_up4)
 
 s4_l_arm_up5= (1670-1656)*cm
-s4_theta_up5= math.atan((40-32.5)*cm/s4_l_arm_up5)
+s4_theta_up5= math.atan((33.5-32.5)*cm/s4_l_arm_up5)
 
 s4_rad_end_up=s4_rad-s4_h_arm_up3+s4_x+ s4_l_arm_up1*math.tan(s4_theta_up1)+ s4_l_arm_up2*math.tan(s4_theta_up2)+s4_l_arm_up4*math.tan(s4_theta_up4)+s4_l_arm_up5*math.tan(s4_theta_up5)
 s4_rad_end_low=-s4_rad+(s4_l_arm_low2)*math.tan(s4_theta_low1)+(s4_l_arm_low3)*math.tan(s4_theta_low3)-(s4_l_arm_low4)*math.tan(s4_theta_low4)
@@ -143,7 +141,7 @@ f.write("\t<union name=\"solid_s4_8\">\n\t\t<first ref=\"solid_s4_7\"/>\n\t\t<se
 f.write("\t<union name=\"solid_s4_9\">\n\t\t<first ref=\"solid_s4_8\"/>\n\t\t<second ref=\"solid_s4_low4\"/>\n\t\t<position name=\"pos_s4_9\" x=\""+str(-s4_rad+s4_x/2+(s4_l_arm_low2)*math.tan(s4_theta_low1)+(s4_l_arm_low3)*math.tan(s4_theta_low3)-(s4_l_arm_low4)/2*math.tan(s4_theta_low4))+"\" y=\""+str(-s4_l_arm_low1-s4_l_arm_low2-s4_l_arm_low3-s4_l_arm_low4/2)+"\" z=\""+str(-(s4_y_tb+s4_y_mid)/2)+"\"/>\n\t\t<rotation name=\"rot_s4_9\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t</union>\n")
 f.write("\t<union name=\"solid_s4_10\">\n\t\t<first ref=\"solid_s4_9\"/>\n\t\t<second ref=\"solid_s4_up4\"/>\n\t\t<position name=\"pos_s4_10\" x=\""+str(s4_rad-s4_h_arm_up3+s4_x/2+ s4_l_arm_up1*math.tan(s4_theta_up1)+ s4_l_arm_up2*math.tan(s4_theta_up2)+s4_l_arm_up4/2*math.tan(s4_theta_up4))+"\" y=\""+str(-s4_l_arm_up1-s4_l_arm_up2-s4_l_arm_up3-s4_l_arm_up4/2)+"\" z=\""+str(-(s4_y_tb+s4_y_mid)/2)+"\"/>\n\t\t<rotation name=\"rot_s4_10\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t</union>\n")
 f.write("\t<union name=\"solid_s4_11\">\n\t\t<first ref=\"solid_s4_10\"/>\n\t\t<second ref=\"solid_s4_up5\"/>\n\t\t<position name=\"pos_s4_11\" x=\""+str(s4_rad-s4_h_arm_up3+s4_x/2+ s4_l_arm_up1*math.tan(s4_theta_up1)+ s4_l_arm_up2*math.tan(s4_theta_up2)+s4_l_arm_up4*math.tan(s4_theta_up4)+s4_l_arm_up5/2*math.tan(s4_theta_up5))+"\" y=\""+str(-s4_l_arm_up1-s4_l_arm_up2-s4_l_arm_up3-s4_l_arm_up4-s4_l_arm_up5/2)+"\" z=\""+str(-(s4_y_tb+s4_y_mid)/2)+"\"/>\n\t\t<rotation name=\"rot_s4_11\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t</union>\n")
-f.write("\t<union name=\"solid_s4\">\n\t\t<first ref=\"solid_s4_11\"/>\n\t\t<second ref=\"solid_s4_endNose\"/>\n\t\t<position name=\"pos_s4_12\" x=\""+str(s4_rad-s4_h_arm_up3+3*s4_x/2-s4_rad_end+ s4_l_arm_up1*math.tan(s4_theta_up1)+ s4_l_arm_up2*math.tan(s4_theta_up2)+s4_l_arm_up4*math.tan(s4_theta_up4)+s4_l_arm_up5/2*math.tan(s4_theta_up5))+"\" y=\""+str(-s4_l_arm_up1-s4_l_arm_up2-s4_l_arm_up3-s4_l_arm_up4-s4_l_arm_up5)+"\" z=\""+str(-(s4_y_tb+s4_y_mid)/2)+"\"/>\n\t\t<rotation name=\"rot_s4_12\" x=\"-pi\" y=\"0\" z=\"0\"/>\n\t</union>\n")
+f.write("\t<union name=\"solid_s4\">\n\t\t<first ref=\"solid_s4_11\"/>\n\t\t<second ref=\"solid_s4_endNose\"/>\n\t\t<position name=\"pos_s4_12\" x=\""+str(s4_rad-s4_h_arm_up3+s4_x-s4_rad_end+ s4_l_arm_up1*math.tan(s4_theta_up1)+ s4_l_arm_up2*math.tan(s4_theta_up2)+s4_l_arm_up4*math.tan(s4_theta_up4)+s4_l_arm_up5*math.tan(s4_theta_up5))+"\" y=\""+str(-s4_l_arm_up1-s4_l_arm_up2-s4_l_arm_up3-s4_l_arm_up4-s4_l_arm_up5)+"\" z=\""+str(-(s4_y_tb+s4_y_mid)/2)+"\"/>\n\t\t<rotation name=\"rot_s4_12\" x=\"-pi\" y=\"0\" z=\"0\"/>\n\t</union>\n")
 
 
 ### Final unions

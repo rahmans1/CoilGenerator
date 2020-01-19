@@ -153,8 +153,8 @@ f.write("\t<union name=\"solid_s4_2\">\n\t\t<first ref=\"solid_s4_1\"/>\n\t\t<se
 f.write("\t<union name=\"solid_s4_3\">\n\t\t<first ref=\"solid_s4_2\"/>\n\t\t<second ref=\"solid_s4_1\"/>\n\t\t<position name=\"pos_s4_3\" x=\""+str(0)+"\" y=\""+str(0)+"\" z=\""+str(-s4_y_tb-s4_y_mid)+"\"/>\n\t\t<rotation name=\"rot_s4_3\" x=\"0\" y=\"0\" z=\"0\"/>\n\t</union>\n")
 f.write("\t<union name=\"solid_s4_4\">\n\t\t<first ref=\"solid_s4_3\"/>\n\t\t<second ref=\"solid_s4_up1\"/>\n\t\t<position name=\"pos_s4_4\" x=\""+str(s4_rad-s4_x/2+s4_l_arm_up1/2*math.tan(s4_theta_up1))+"\" y=\""+str(-s4_l_arm_up1/2)+"\" z=\""+str(-(s4_y_tb+s4_y_mid)/2)+"\"/>\n\t\t<rotation name=\"rot_s4_4\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t</union>\n")
 f.write("\t<union name=\"solid_s4_5\">\n\t\t<first ref=\"solid_s4_4\"/>\n\t\t<second ref=\"solid_s4_up2\"/>\n\t\t<position name=\"pos_s4_5\" x=\""+str(s4_rad-s4_x/2+ s4_l_arm_up1*math.tan(s4_theta_up1)+ s4_l_arm_up2/2*math.tan(s4_theta_up2))+"\" y=\""+str(-s4_l_arm_up1-s4_l_arm_up2/2)+"\" z=\""+str(-(s4_y_tb+s4_y_mid)/2)+"\"/>\n\t\t<rotation name=\"rot_s4_5\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t</union>\n")
-f.write("\t<union name=\"solid_s4_6\">\n\t\t<first ref=\"solid_s4_5\"/>\n\t\t<second ref=\"solid_s4_up3\"/>\n\t\t<position name=\"pos_s4_5\" x=\""+str(s4_rad+s4_l_arm_up1*math.tan(s4_theta_up1)+s4_l_arm_up2*math.tan(s4_theta_up2)-s4_rad_up3)+"\" y=\""+str(-s4_l_arm_up1-s4_l_arm_up2-s4_l_box_up3)+"\" z=\""+str(-(s4_y_tb+s4_y_mid)/2)+"\"/>\n\t\t<rotation name=\"rot_s4_5\" x=\"pi\" y=\"0\" z=\"0\"/>\n\t</union>\n")
-f.write("\t<union name=\"solid_s4_7\">\n\t\t<first ref=\"solid_s4_6\"/>\n\t\t<second ref=\"solid_s4_low2\"/>\n\t\t<position name=\"pos_s4_6\" x=\""+str(-s4_rad+s4_x/2+(s4_l_arm_low2)/2*math.tan(s4_theta_low1))+"\" y=\""+str(-s4_l_arm_low1-s4_l_arm_low2/2)+"\" z=\""+str(-(s4_y_tb+s4_y_mid)/2)+"\"/>\n\t\t<rotation name=\"rot_s4_7\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t</union>\n")
+f.write("\t<union name=\"solid_s4_6\">\n\t\t<first ref=\"solid_s4_5\"/>\n\t\t<second ref=\"solid_s4_up3\"/>\n\t\t<position name=\"pos_s4_6\" x=\""+str(s4_rad+s4_l_arm_up1*math.tan(s4_theta_up1)+s4_l_arm_up2*math.tan(s4_theta_up2)-s4_rad_up3)+"\" y=\""+str(-s4_l_arm_up1-s4_l_arm_up2-s4_l_box_up3)+"\" z=\""+str(-(s4_y_tb+s4_y_mid)/2)+"\"/>\n\t\t<rotation name=\"rot_s4_6\" x=\"pi\" y=\"0\" z=\"0\"/>\n\t</union>\n")
+f.write("\t<union name=\"solid_s4_7\">\n\t\t<first ref=\"solid_s4_6\"/>\n\t\t<second ref=\"solid_s4_low2\"/>\n\t\t<position name=\"pos_s4_7\" x=\""+str(-s4_rad+s4_x/2+(s4_l_arm_low2)/2*math.tan(s4_theta_low1))+"\" y=\""+str(-s4_l_arm_low1-s4_l_arm_low2/2)+"\" z=\""+str(-(s4_y_tb+s4_y_mid)/2)+"\"/>\n\t\t<rotation name=\"rot_s4_7\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t</union>\n")
 f.write("\t<union name=\"solid_s4_8\">\n\t\t<first ref=\"solid_s4_7\"/>\n\t\t<second ref=\"solid_s4_low3\"/>\n\t\t<position name=\"pos_s4_8\" x=\""+str(-s4_rad+s4_x/2+(s4_l_arm_low2)*math.tan(s4_theta_low1)+(s4_l_arm_low3)/2*math.tan(s4_theta_low3))+"\" y=\""+str(-s4_l_arm_low1-s4_l_arm_low2-s4_l_arm_low3/2)+"\" z=\""+str(-(s4_y_tb+s4_y_mid)/2)+"\"/>\n\t\t<rotation name=\"rot_s4_8\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t</union>\n")
 f.write("\t<union name=\"solid_s4_9\">\n\t\t<first ref=\"solid_s4_8\"/>\n\t\t<second ref=\"solid_s4_low4\"/>\n\t\t<position name=\"pos_s4_9\" x=\""+str(-s4_rad+s4_x/2+(s4_l_arm_low2)*math.tan(s4_theta_low1)+(s4_l_arm_low3)*math.tan(s4_theta_low3)-(s4_l_arm_low4)/2*math.tan(s4_theta_low4))+"\" y=\""+str(-s4_l_arm_low1-s4_l_arm_low2-s4_l_arm_low3-s4_l_arm_low4/2)+"\" z=\""+str(-(s4_y_tb+s4_y_mid)/2)+"\"/>\n\t\t<rotation name=\"rot_s4_9\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t</union>\n")
 f.write("\t<union name=\"solid_s4_10\">\n\t\t<first ref=\"solid_s4_9\"/>\n\t\t<second ref=\"solid_s4_up4\"/>\n\t\t<position name=\"pos_s4_10\" x=\""+str(s4_rad-s4_h_arm_up3+s4_x/2+ s4_l_arm_up1*math.tan(s4_theta_up1)+ s4_l_arm_up2*math.tan(s4_theta_up2)+s4_l_arm_up4/2*math.tan(s4_theta_up4))+"\" y=\""+str(-s4_l_arm_up1-s4_l_arm_up2-s4_l_arm_up3-s4_l_arm_up4/2)+"\" z=\""+str(-(s4_y_tb+s4_y_mid)/2)+"\"/>\n\t\t<rotation name=\"rot_s4_10\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t</union>\n")
@@ -168,7 +168,16 @@ f.write("\t<union name=\"solid_s1_s2_s3\">\n\t\t<first ref=\"solid_s1_s2\"/>\n\t
 f.write("\t<union name=\"solid_s1_s2_s3_s4\">\n\t\t<first ref=\"solid_s1_s2_s3\"/>\n\t\t<second ref=\"solid_s4\"/>\n\t\t<position name=\"pos_s1_s2_s3_s4\" x=\""+str(s1_l_arm/2*math.tan(s1_theta)+s2_l_arm/2*math.tan(s2_theta)+s3_l_arm/2*math.tan(s3_theta)+s4_l_arm_low1/2*math.tan(s4_theta_low1))+"\" y=\""+str(-s1_l_arm-s2_l_arm-s3_l_arm)+"\" z=\""+str((s4_y_mid+s4_y_tb)/2)+"\"/>\n\t\t<rotation name=\"rot_s1_s2_s3_s4\" x=\"0\" y=\"0\" z=\"0\"/>\n\t</union>\n")
 
 
-f.write("\t<box name=\"solid_dcoil\" lunit=\"mm\" x=\""+str(h_single_coil)+"\" y=\""+str(s4_y)+"\" z=\""+str(l_single_coil)+"\"/>\n")
+
+
+
+f.write("\t<box name=\"solid_dcoil_mid\" lunit=\"mm\" x=\""+str(h_single_coil)+"\" y=\""+str(s1_y)+"\" z=\""+str(l_single_coil)+"\"/>\n")
+f.write("\t<box name=\"solid_dcoil_tb\" lunit=\"mm\" x=\""+str(h_single_coil-s4_l_arm_low1*math.tan(s4_theta_low1))+"\" y=\""+str(s4_y)+"\" z=\""+str(l_single_coil-s1_rad-s1_l_arm-s2_l_arm-s3_l_arm+s4_rad)+"\"/>\n")
+f.write("\t<union name=\"solid_dcoil\">\n\t\t<first ref=\"solid_dcoil_mid\"/>\n\t\t<second ref=\"solid_dcoil_tb\"/>\n\t\t<position name=\"pos_dcoil\" x=\""+str(s4_l_arm_low1/2*math.tan(s4_theta_low1))+"\" y=\""+str(0)+"\" z=\""+str((s1_rad+s1_l_arm+s2_l_arm+s3_l_arm-s4_rad)/2)+"\"/>\n\t\t<rotation name=\"rot_dcoil\" x=\"0\" y=\"0\" z=\"0\"/>\n\t</union>\n")
+
+
+
+
 f.write("\t<tube name=\"solid_DS_toroidMother\" rmin=\""+str(r_inner_mother)+"\"  rmax=\""+str(r_outer_mother)+"\" z=\""+str(l_mother)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n")
 
 ### Trapezoid
@@ -179,10 +188,10 @@ f.write("</solids>\n")
 f.write("\n\n<structure>\n")
 
 for i in range(0,7):
-	f.write("\t<volume name=\"logic_s1_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Cu\"/>\n\t\t<solidref ref=\"solid_s1_s2_s3_s4\"/>\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"red\"/>\n\t</volume>\n")
+	f.write("\t<volume name=\"logic_s1_s2_s3_s4_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Cu\"/>\n\t\t<solidref ref=\"solid_s1_s2_s3_s4\"/>\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"red\"/>\n\t</volume>\n")
         
 	f.write("\t<volume name=\"logic_dcoil_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Galactic\"/>\n\t\t<solidref ref=\"solid_dcoil\"/>\n")
-        f.write("\t\t<physvol name=\"s1_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_s1_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_s1_"+str(i)+"\" x=\""+str(x_origin)+"\" y=\""+str(0)+"\" z=\""+str(z_origin)+"\"/>\n\t\t\t<rotation name=\"rot_s1_"+str(i)+"\" x=\"pi/2\" y=\"0\" z=\""+str(0)+"\"/>\n\t\t</physvol>\n")
+        f.write("\t\t<physvol name=\"s1_s2_s3_s4_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_s1_s2_s3_s4_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_s1_s2_s3_s4_"+str(i)+"\" x=\""+str(x_origin)+"\" y=\""+str(0)+"\" z=\""+str(z_origin)+"\"/>\n\t\t\t<rotation name=\"rot_s1_s2_s3_s4_"+str(i)+"\" x=\"pi/2\" y=\"0\" z=\""+str(0)+"\"/>\n\t\t</physvol>\n")
 	f.write("\t</volume>\n")
 
         f.write("\t<volume name=\"logic_photon_collimator_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Cu\"/>\n\t\t<solidref ref=\"solid_photon_collimator\"/>\n\t</volume>\n")
@@ -201,7 +210,8 @@ for i in range(0,7):
         theta=2*i*math.pi/7+2*math.pi/14
         xpos=rpos*(math.cos(theta))
         ypos=rpos*(math.sin(theta))
-        f.write("\t\t<physvol name=\"photon_collimator_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_photon_collimator_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_photon_collimator_"+str(i)+"\" x=\""+str(xpos)+"\" y=\""+str(ypos)+"\" z=\"0\"/>\n\t\t\t<rotation name=\"rot_photon_collimator_"+str(i)+"\" x=\""+str(0)+"\" y=\"0\" z=\""+str(-theta)+"\"/>\n\t\t</physvol>\n")
+        zpos=12835-10000-l_single_coil/2+s1_rad
+        f.write("\t\t<physvol name=\"photon_collimator_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_photon_collimator_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_photon_collimator_"+str(i)+"\" x=\""+str(xpos)+"\" y=\""+str(ypos)+"\" z=\""+str(zpos)+"\"/>\n\t\t\t<rotation name=\"rot_photon_collimator_"+str(i)+"\" x=\""+str(0)+"\" y=\"0\" z=\""+str(-theta)+"\"/>\n\t\t</physvol>\n")
 f.write("\t</volume>\n")
 
 f.write("</structure>\n")

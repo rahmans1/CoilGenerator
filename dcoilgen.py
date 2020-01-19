@@ -8,29 +8,29 @@ cm=10.0
 
 # segment 1
 s1_x=(17.25-14.5)*cm         # extent along x
-s1_y=2*cm                    # extent along y
+s1_y=2.7*cm                    # extent along y
 s1_l_arm=(1100-1000)*cm      # length of arms
 s1_rad=(17.25-4)/2*cm        # arc rad of nose  
 s1_theta=math.atan((20.0-17.25)*cm/s1_l_arm)     # slant angle of upper arm
 
 # segment 2
 s2_x=(17.25-15.9)*cm 
-s2_y=2*cm 
+s2_y=2.7*cm 
 s2_l_arm=(1200-1100)*cm                            # length of arms
 s2_rad=(s1_rad-s1_x+s1_l_arm/2*math.tan(s1_theta)) # arc rad of nose
 s2_theta=math.atan((25.45-20)*cm/s2_l_arm)
 
 # segment 3
 s3_x=(21.4-18.65)*cm
-s3_y=2*cm
+s3_y=2.7*cm
 s3_l_arm=(1300-1200)*cm
 s3_rad=(s2_rad-s2_x+s2_l_arm/2*math.tan(s2_theta))
 s3_theta=math.atan((29.1-25.45)*cm/s3_l_arm)
 
 # segment 4
 s4_x=s1_x+s2_x+s3_x           # is this correct?
-s4_y_tb=1*cm                  # thickness of top and bottom pancake
-s4_y_mid=2*cm                 # thickness of middle pancake
+s4_y_tb=1.4*cm                  # thickness of top and bottom pancake
+s4_y_mid=2.7*cm                 # thickness of middle pancake
 s4_y=2*s4_y_tb+s4_y_mid       # total thickness of segment 4 
 s4_l_arm_low1= (1404-1300)*cm # length of low1. low1 is bottom arm adjacent to nose.
 s4_l_arm_low2= (1480-1404)*cm # length of low2

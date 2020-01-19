@@ -79,6 +79,19 @@ r_outer_mother=pos+h_single_coil/2+10
 l_mother=l_single_coil
 
 
+# photon collimator
+r_inner_photon=74.22
+r_outer_photon=180.22
+r_extent_photon=r_outer_photon-r_inner_photon
+h_inner_photon=2*18.25
+h_outer_photon=2*54.15
+r_inner_sub_photon=116.38
+r_extent_sub_photon=r_outer_photon-r_inner_sub_photon
+h_inner_sub_photon=2*12.75
+h_outer_sub_photon=2*29.15
+t_photon=70
+
+
 f=open(output_file+".gdml", "w+")
 
 
@@ -157,9 +170,11 @@ f.write("\t<union name=\"solid_s1_s2_s3_s4\">\n\t\t<first ref=\"solid_s1_s2_s3\"
 
 f.write("\t<box name=\"solid_dcoil\" lunit=\"mm\" x=\""+str(h_single_coil)+"\" y=\""+str(s4_y)+"\" z=\""+str(l_single_coil)+"\"/>\n")
 f.write("\t<tube name=\"solid_DS_toroidMother\" rmin=\""+str(r_inner_mother)+"\"  rmax=\""+str(r_outer_mother)+"\" z=\""+str(l_mother)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n")
+
+### Trapezoid
+f.write("\t<xtru name=\"solid_photon_collimator\" lunit=\"mm\">\n\t\t<twoDimVertex x=\""+str(-r_extent_photon/2)+"\" y=\""+str(h_inner_photon/2)+"\"/>\n\t\t<twoDimVertex x=\""+str(-r_extent_photon/2)+"\" y=\""+str(-h_inner_photon/2)+"\"/>\n\t\t<twoDimVertex x=\""+str(r_extent_photon/2)+"\" y=\""+str(-h_outer_photon/2)+"\"/>\n\t\t<twoDimVertex x=\""+str(r_extent_photon/2)+"\" y=\""+str(-h_outer_sub_photon/2)+"\"/>\n\t\t<twoDimVertex x=\""+str(r_extent_photon/2-r_extent_sub_photon)+"\" y=\""+str(-h_inner_sub_photon/2)+"\"/>\n\t\t<twoDimVertex x=\""+str(r_extent_photon/2-r_extent_sub_photon)+"\" y=\""+str(h_inner_sub_photon/2)+"\"/>\n\t\t<twoDimVertex x=\""+str(r_extent_photon/2)+"\" y=\""+str(h_outer_sub_photon/2)+"\"/>\n\t\t<twoDimVertex x=\""+str(r_extent_photon/2)+"\" y=\""+str(h_outer_photon/2)+"\"/>\n\t\t<section zOrder=\"1\" zPosition=\""+str(-t_photon/2)+"\" xOffset=\"0\" yOffset=\"0\" scalingFactor=\"1\"/>\n\t\t<section zOrder=\"2\" zPosition=\""+str(t_photon/2)+"\" xOffset=\"0\" yOffset=\"0\" scalingFactor=\"1\"/>\n\t</xtru>\n")
+
 f.write("</solids>\n")
-
-
 
 f.write("\n\n<structure>\n")
 
@@ -170,15 +185,23 @@ for i in range(0,7):
         f.write("\t\t<physvol name=\"s1_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_s1_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_s1_"+str(i)+"\" x=\""+str(x_origin)+"\" y=\""+str(0)+"\" z=\""+str(z_origin)+"\"/>\n\t\t\t<rotation name=\"rot_s1_"+str(i)+"\" x=\"pi/2\" y=\"0\" z=\""+str(0)+"\"/>\n\t\t</physvol>\n")
 	f.write("\t</volume>\n")
 
+        f.write("\t<volume name=\"logic_photon_collimator_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Cu\"/>\n\t\t<solidref ref=\"solid_photon_collimator\"/>\n\t</volume>\n")
+
 
 f.write("\t<volume name=\"DS_toroidMother\">\n\t\t<materialref ref=\"G4_Galactic\"/>\n\t\t<solidref ref=\"solid_DS_toroidMother\"/>\n")
 
-for i in range(0,1):
+for i in range(0,7):
         rpos=pos
         theta=2*i*math.pi/7
         xpos=rpos*(math.cos(theta))
         ypos=rpos*(math.sin(theta)) 
 	f.write("\t\t<physvol name=\"dcoil_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_dcoil_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_dcoil_"+str(i)+"\" x=\""+str(xpos)+"\" y=\""+str(ypos)+"\" z=\"0\"/>\n\t\t\t<rotation name=\"rot_dcoil_"+str(i)+"\" x=\"0\" y=\"0\" z=\""+str(-theta)+"\"/>\n\t\t</physvol>\n")
+
+        rpos=r_inner_photon+r_extent_photon/2
+        theta=2*i*math.pi/7+2*math.pi/14
+        xpos=rpos*(math.cos(theta))
+        ypos=rpos*(math.sin(theta))
+        f.write("\t\t<physvol name=\"photon_collimator_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_photon_collimator_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_photon_collimator_"+str(i)+"\" x=\""+str(xpos)+"\" y=\""+str(ypos)+"\" z=\"0\"/>\n\t\t\t<rotation name=\"rot_photon_collimator_"+str(i)+"\" x=\""+str(0)+"\" y=\"0\" z=\""+str(-theta)+"\"/>\n\t\t</physvol>\n")
 f.write("\t</volume>\n")
 
 f.write("</structure>\n")

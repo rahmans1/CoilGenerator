@@ -15,6 +15,7 @@ s_theta= math.atan((25.210-24.751)/(789.132-610.832))
 len_ucoil=2*s_rad+s_l_arm
 z_origin=s_rad-len_ucoil/2
 
+len_mother=len_ucoil+20
 
 pos=2.928*cm+math.sqrt(math.pow(s_rad,2)+math.pow(s_l_arm/2,2))*math.sin(math.atan(2*s_rad/s_l_arm)+s_theta)
 #theta=math.atan(()/)
@@ -41,7 +42,7 @@ f.write("\t<union name=\"solid_s\">\n\t\t<first ref=\"solid_s_2\"/>\n\t\t<second
 
 
 
-f.write("\t<cone name=\"solid_upstreamToroidMother\" rmin1=\""+str(29.28-0.5)+"\"  rmax1=\""+str(252.10+0.5)+"\" rmin2=\""+str(33.87-0.5)+"\" rmax2=\""+str(252.10+0.5)+"\"  z=\""+str(len_ucoil)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n") #Make sure this mother volume doesn't interfere with coils
+f.write("\t<cone name=\"solid_upstreamToroidMother\" rmin1=\""+str(29.28-0.5)+"\"  rmax1=\""+str(252.10+0.5)+"\" rmin2=\""+str(33.87-0.5)+"\" rmax2=\""+str(252.10+0.5)+"\"  z=\""+str(len_mother)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n") #Make sure this mother volume doesn't interfere with coils
 f.write("</solids>\n")
 
 

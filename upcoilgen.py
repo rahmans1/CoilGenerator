@@ -41,7 +41,7 @@ f.write("\t<union name=\"solid_s\">\n\t\t<first ref=\"solid_s_2\"/>\n\t\t<second
 
 
 
-f.write("\t<cone name=\"solid_upstreamToroidMother\" rmin1=\""+str(29.28-2)+"\"  rmax1=\""+str(252.10+2)+"\" rmin2=\""+str(33.87-2)+"\" rmax2=\""+str(252.10+2)+"\"  z=\""+str(s_l_arm+2*s_rad)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n") #Make sure this mother volume doesn't interfere with coils
+f.write("\t<cone name=\"solid_upstreamToroidMother\" rmin1=\""+str(29.28-0.5)+"\"  rmax1=\""+str(252.10+0.5)+"\" rmin2=\""+str(33.87-0.5)+"\" rmax2=\""+str(252.10+0.5)+"\"  z=\""+str(len_ucoil)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n") #Make sure this mother volume doesn't interfere with coils
 f.write("</solids>\n")
 
 

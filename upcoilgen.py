@@ -15,6 +15,7 @@ s_theta= math.atan((25.210-24.751)/(789.132-610.832))
 len_ucoil=2*s_rad+s_l_arm
 z_origin=s_rad-len_ucoil/2
 
+len_mother=len_ucoil+20
 
 pos=2.928*cm+math.sqrt(math.pow(s_rad,2)+math.pow(s_l_arm/2,2))*math.sin(math.atan(2*s_rad/s_l_arm)+s_theta)
 #theta=math.atan(()/)
@@ -32,7 +33,7 @@ f.write("\t<box name=\"solid_s_arm_low\" lunit=\"mm\" x=\""+str(s_x)+"\" y=\""+s
 f.write("\t<box name=\"solid_s_arm_up\" lunit=\"mm\" x=\""+str(s_x)+"\" y=\""+str(s_y)+"\" z=\""+str(s_l_arm)+"\"/>\n")
 f.write("\t<tube name=\"solid_s_frontNose\" rmin=\""+str(s_rad-s_x)+"\"  rmax=\""+str(s_rad)+"\" z=\""+str(s_y)+"\" startphi=\"0\" deltaphi=\"pi\" aunit=\"rad\" lunit=\"mm\"/>\n")
 f.write("\t<tube name=\"solid_s_endNose\" rmin=\""+str(s_rad-s_x)+"\"  rmax=\""+str(s_rad)+"\" z=\""+str(s_y)+"\" startphi=\"0\" deltaphi=\"pi\" aunit=\"rad\" lunit=\"mm\"/>\n")
-f.write("\t<box name=\"solid_ucoil\" lunit=\"mm\" x=\""+str(2*s_rad)+"\" y=\""+str(s_y)+"\" z=\""+str(len_ucoil)+"\"/>\n")
+f.write("\t<box name=\"solid_ucoil\" lunit=\"mm\" x=\""+str(2*s_rad)+"\" y=\""+str(len_ucoil)+"\" z=\""+str(s_y)+"\"/>\n")
 
 
 f.write("\t<union name=\"solid_s_1\">\n\t\t<first ref=\"solid_s_frontNose\"/>\n\t\t<second ref=\"solid_s_arm_up\"/>\n\t\t<position name=\"pos_s_1\" x=\""+str(s_rad-s_x/2)+"\" y=\""+str(-s_l_arm/2)+"\" z=\"0\"/>\n\t\t<rotation name=\"rot_s_1\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t</union>\n")
@@ -41,29 +42,29 @@ f.write("\t<union name=\"solid_s\">\n\t\t<first ref=\"solid_s_2\"/>\n\t\t<second
 
 
 
-f.write("\t<cone name=\"solid_upstreamToroidMother\" rmin1=\""+str(29.28-0.5)+"\"  rmax1=\""+str(252.10+0.5)+"\" rmin2=\""+str(33.87-0.5)+"\" rmax2=\""+str(252.10+0.5)+"\"  z=\""+str(s_l_arm+2*s_rad+1)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n") #Make sure this mother volume doesn't interfere with coils
+f.write("\t<cone name=\"solid_upstreamToroidMother\" rmin1=\""+str(29.28-0.5)+"\"  rmax1=\""+str(252.10+0.5)+"\" rmin2=\""+str(33.87-0.5)+"\" rmax2=\""+str(252.10+0.5)+"\"  z=\""+str(len_mother)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n") #Make sure this mother volume doesn't interfere with coils
 f.write("</solids>\n")
 
 
 
 f.write("\n\n<structure>\n")
 
-for i in range(0,1):
+for i in range(0,7):
 	f.write("\t<volume name=\"logic_s_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Cu\"/>\n\t\t<solidref ref=\"solid_s\"/>\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"red\"/>\n\t</volume>\n")
 
 	f.write("\t<volume name=\"logic_ucoil_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Galactic\"/>\n\t\t<solidref ref=\"solid_ucoil\"/>\n")
-	f.write("\t\t<physvol name=\"s_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_s_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_s_"+str(i)+"\" x=\""+str(0)+"\" y=\"0\" z=\""+str(z_origin)+"\"/>\n\t\t\t<rotation name=\"rot_s_"+str(i)+"\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t\t</physvol>\n")
+	f.write("\t\t<physvol name=\"s_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_s_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_s_"+str(i)+"\" x=\""+str(0)+"\" y=\""+str(-z_origin)+"\" z=\""+str(0)+"\"/>\n\t\t\t<rotation name=\"rot_s_"+str(i)+"\" x=\"0\" y=\"0\" z=\"0\"/>\n\t\t</physvol>\n")
 	f.write("\t</volume>\n")
 
 
 f.write("\t<volume name=\"upstreamToroidMother\">\n\t\t<materialref ref=\"G4_Galactic\"/>\n\t\t<solidref ref=\"solid_upstreamToroidMother\"/>\n")
 
-for i in range(0,1):
+for i in range(0,7):
         rpos=pos
         theta=2*i*math.pi/7
         xpos=rpos*(math.cos(theta))
         ypos=rpos*(math.sin(theta)) 
-	f.write("\t\t<physvol name=\"ucoil_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_ucoil_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_ucoil_"+str(i)+"\" x=\""+str(xpos)+"\" y=\""+str(ypos)+"\" z=\"0\"/>\n\t\t\t<rotation name=\"rot_ucoil_"+str(i)+"\" x=\"0\" y=\""+str(-s_theta)+"\" z=\""+str(-theta)+"\"/>\n\t\t</physvol>\n")
+	f.write("\t\t<physvol name=\"ucoil_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_ucoil_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_ucoil_"+str(i)+"\" x=\""+str(xpos)+"\" y=\""+str(ypos)+"\" z=\""+str(0)+"\"/>\n\t\t\t<rotation name=\"rot_ucoil_"+str(i)+"\" x=\"pi/2\" y=\""+str(theta)+"\" z=\""+str(-s_theta)+"\"/>\n\t\t</physvol>\n")
 f.write("\t</volume>\n")
 
 f.write("</structure>\n")

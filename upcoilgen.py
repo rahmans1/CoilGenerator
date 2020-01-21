@@ -17,7 +17,7 @@ z_origin=s_rad-len_ucoil/2
 len_mother=len_ucoil+20
 
 pos=2.928*cm+math.sqrt(math.pow(s_rad,2)+math.pow(s_l_arm/2,2))*math.sin(math.atan(2*s_rad/s_l_arm)+s_theta)
-#theta=math.atan(()/)
+
 
 f=open(output_file+".gdml", "w+")
 
@@ -43,24 +43,47 @@ f.write("</solids>\n")
 f.write("\n\n<structure>\n")
 
 for i in range(0,7):
-	f.write("\t<volume name=\"logic_s_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Cu\"/>\n\t\t<solidref ref=\"solid_s\"/>\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"red\"/>\n\t</volume>\n")
+        logic_s="\t<volume name=\"logic_s_"+str(i)+"\">"
+        logic_s+="\n\t\t<materialref ref=\"G4_Cu\"/>"
+        logic_s+="\n\t\t<solidref ref=\"solid_s\"/>"
+        logic_s+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"magenta\"/>"
+        logic_s+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"
+        logic_s+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(3000+i+1)+"\"/>"
+        logic_s+="\n\t</volume>\n"
+        f.write(logic_s)
+            
+        logic_ucoil="\t<volume name=\"logic_ucoil_"+str(i)+"\">"
+        logic_ucoil+="\n\t\t<materialref ref=\"G4_Galactic\"/>"
+        logic_ucoil+="\n\t\t<solidref ref=\"solid_ucoil\"/>"
+        logic_ucoil+="\n\t\t<auxiliary auxtype=\"Alpha\" auxvalue=\"0.0\"/>"
+        logic_ucoil+="\n\t\t<physvol name=\"s_"+str(i)+"\">"
+        logic_ucoil+="\n\t\t\t<volumeref ref=\"logic_s_"+str(i)+"\"/>"
+        logic_ucoil+="\n\t\t\t<position name=\"pos_logic_s_"+str(i)+"\" x=\""+str(0)+"\" y=\""+str(-z_origin)+"\" z=\""+str(0)+"\"/>"
+        logic_ucoil+="\n\t\t\t<rotation name=\"rot_logic_s_"+str(i)+"\" x=\"0\" y=\"0\" z=\"0\"/>"        
+        logic_ucoil+="\n\t\t</physvol>"
+        logic_ucoil+="\n\t</volume>\n"
+        f.write(logic_ucoil)
 
-	f.write("\t<volume name=\"logic_ucoil_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Galactic\"/>\n\t\t<solidref ref=\"solid_ucoil\"/>\n")
-	f.write("\t\t<physvol name=\"s_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_s_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_s_"+str(i)+"\" x=\""+str(0)+"\" y=\""+str(-z_origin)+"\" z=\""+str(0)+"\"/>\n\t\t\t<rotation name=\"rot_s_"+str(i)+"\" x=\"0\" y=\"0\" z=\"0\"/>\n\t\t</physvol>\n")
-	f.write("\t</volume>\n")
-
-
-f.write("\t<volume name=\"upstreamToroidMother\">\n\t\t<materialref ref=\"G4_Galactic\"/>\n\t\t<solidref ref=\"solid_upstreamToroidMother\"/>\n")
+upstreamToroidMother="\t<volume name=\"upstreamToroidMother\">"
+upstreamToroidMother+="\n\t\t<materialref ref=\"G4_Galactic\"/>"
+upstreamToroidMother+="\n\t\t<solidref ref=\"solid_upstreamToroidMother\"/>"
+upstreamToroidMother+="\n\t\t<auxiliary auxtype=\"Alpha\" auxvalue=\"0.0\"/>"
 
 for i in range(0,7):
         rpos=pos
         theta=2*i*math.pi/7
         xpos=rpos*(math.cos(theta))
         ypos=rpos*(math.sin(theta)) 
-	f.write("\t\t<physvol name=\"ucoil_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_ucoil_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_ucoil_"+str(i)+"\" x=\""+str(xpos)+"\" y=\""+str(ypos)+"\" z=\""+str(0)+"\"/>\n\t\t\t<rotation name=\"rot_ucoil_"+str(i)+"\" x=\"pi/2\" y=\""+str(theta)+"\" z=\""+str(-s_theta)+"\"/>\n\t\t</physvol>\n")
-f.write("\t</volume>\n")
+	upstreamToroidMother+="\n\t\t<physvol name=\"ucoil_"+str(i)+"\">"
+        upstreamToroidMother+="\n\t\t\t<volumeref ref=\"logic_ucoil_"+str(i)+"\"/>"
+        upstreamToroidMother+="\n\t\t\t<position name=\"pos_ucoil_"+str(i)+"\" x=\""+str(xpos)+"\" y=\""+str(ypos)+"\" z=\""+str(0)+"\"/>"
+        upstreamToroidMother+="\n\t\t\t<rotation name=\"rot_ucoil_"+str(i)+"\" x=\"pi/2\" y=\""+str(theta)+"\" z=\""+str(-s_theta)+"\"/>"
+        upstreamToroidMother+="\n\t\t</physvol>"
 
-f.write("</structure>\n")
+upstreamToroidMother+="\n\t</volume>"
+f.write(upstreamToroidMother)
+
+f.write("\n</structure>\n")
 
 f.write("<setup name=\"upstreamToroidWorld\" version=\"1.0\">\n\t<world ref=\"upstreamToroidMother\"/>\n</setup>\n")
 

@@ -3,9 +3,8 @@ import sys
 import os
 import math
 
-output_file="upstream"
+output_file="upstreamToroid"
 cm=10
-
 
 s_x=4.866*cm
 s_y=1.01*cm
@@ -22,7 +21,6 @@ pos=2.928*cm+math.sqrt(math.pow(s_rad,2)+math.pow(s_l_arm/2,2))*math.sin(math.at
 
 f=open(output_file+".gdml", "w+")
 
-
 f.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
 f.write("<gdml\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n\txsi:noNamespaceSchemaLocation=\"http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd\">\n")
 f.write("\n\n<define>\n</define>")
@@ -35,17 +33,12 @@ f.write("\t<tube name=\"solid_s_frontNose\" rmin=\""+str(s_rad-s_x)+"\"  rmax=\"
 f.write("\t<tube name=\"solid_s_endNose\" rmin=\""+str(s_rad-s_x)+"\"  rmax=\""+str(s_rad)+"\" z=\""+str(s_y)+"\" startphi=\"0\" deltaphi=\"pi\" aunit=\"rad\" lunit=\"mm\"/>\n")
 f.write("\t<box name=\"solid_ucoil\" lunit=\"mm\" x=\""+str(2*s_rad)+"\" y=\""+str(len_ucoil)+"\" z=\""+str(s_y)+"\"/>\n")
 
-
 f.write("\t<union name=\"solid_s_1\">\n\t\t<first ref=\"solid_s_frontNose\"/>\n\t\t<second ref=\"solid_s_arm_up\"/>\n\t\t<position name=\"pos_s_1\" x=\""+str(s_rad-s_x/2)+"\" y=\""+str(-s_l_arm/2)+"\" z=\"0\"/>\n\t\t<rotation name=\"rot_s_1\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t</union>\n")
 f.write("\t<union name=\"solid_s_2\">\n\t\t<first ref=\"solid_s_1\"/>\n\t\t<second ref=\"solid_s_arm_low\"/>\n\t\t<position name=\"pos_s_2\" x=\""+str(-s_rad+s_x/2)+"\" y=\""+str(-s_l_arm/2)+"\" z=\"0\"/>\n\t\t<rotation name=\"rot_s_2\" x=\"pi/2\" y=\"0\" z=\"0\"/>\n\t</union>\n")
 f.write("\t<union name=\"solid_s\">\n\t\t<first ref=\"solid_s_2\"/>\n\t\t<second ref=\"solid_s_endNose\"/>\n\t\t<position name=\"pos_s_3\" x=\""+str(0)+"\" y=\""+str(-s_l_arm)+"\" z=\"0\"/>\n\t\t<rotation name=\"rot_s_3\" x=\"-pi\" y=\"0\" z=\"0\"/>\n\t</union>\n")
 
-
-
 f.write("\t<cone name=\"solid_upstreamToroidMother\" rmin1=\""+str(29.28-0.5)+"\"  rmax1=\""+str(252.10+0.5)+"\" rmin2=\""+str(33.87-0.5)+"\" rmax2=\""+str(252.10+0.5)+"\"  z=\""+str(len_mother)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n") #Make sure this mother volume doesn't interfere with coils
 f.write("</solids>\n")
-
-
 
 f.write("\n\n<structure>\n")
 

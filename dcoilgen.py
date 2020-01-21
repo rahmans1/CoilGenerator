@@ -71,12 +71,15 @@ l_single_coil=(s1_rad+s1_l_arm+s2_l_arm+s3_l_arm+s4_l_arm_up1+s4_l_arm_up2+s4_l_
 x_origin=s1_rad-h_single_coil/2
 z_origin= s1_rad-l_single_coil/2
 
+print("The length of the coil is "+str(l_single_coil)+"\n")
+print("The radius of the front end is "+str(s1_rad)+"\n")
+print("The mother volume should be placed at "+str(10000-z_origin)+"\n")
 
 pos=4*cm+h_single_coil/2
 
 r_inner_mother=pos-h_single_coil/2
 r_outer_mother=pos+h_single_coil/2+10
-l_mother=l_single_coil
+l_mother=l_single_coil+20
 
 
 # photon collimator
@@ -98,6 +101,17 @@ f=open(output_file+".gdml", "w+")
 f.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
 f.write("<gdml\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n\txsi:noNamespaceSchemaLocation=\"http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd\">\n")
 f.write("\n\n<define>\n</define>")
+
+
+materials="\n\n<materials>\n"
+materials+="\t<material name=\"G4_CW95\" state=\"solid\">\n"
+materials+="\t\t<D value=\"18.0\" unit=\"g/cm3\"/>\n"
+materials+="\t\t<fraction n=\"0.9500\" ref=\"G4_W\"/>\n"
+materials+="\t\t<fraction n=\"0.015\" ref=\"G4_Cu\"/>\n"
+materials+="\t\t<fraction n=\"0.035\" ref=\"G4_Ni\"/>\n"
+materials+="\t</material>\n"
+materials+="</materials>\n"
+f.write(materials)
 
 
 f.write("\n\n<solids>\n")
@@ -194,7 +208,7 @@ for i in range(0,7):
         f.write("\t\t<physvol name=\"s1_s2_s3_s4_"+str(i)+"\">\n\t\t\t<volumeref ref=\"logic_s1_s2_s3_s4_"+str(i)+"\"/>\n\t\t\t<position name=\"pos_s1_s2_s3_s4_"+str(i)+"\" x=\""+str(x_origin)+"\" y=\""+str(0)+"\" z=\""+str(z_origin)+"\"/>\n\t\t\t<rotation name=\"rot_s1_s2_s3_s4_"+str(i)+"\" x=\"pi/2\" y=\"0\" z=\""+str(0)+"\"/>\n\t\t</physvol>\n")
 	f.write("\t</volume>\n")
 
-        f.write("\t<volume name=\"logic_photon_collimator_"+str(i)+"\">\n\t\t<materialref ref=\"G4_Cu\"/>\n\t\t<solidref ref=\"solid_photon_collimator\"/>\n\t</volume>\n")
+        f.write("\t<volume name=\"logic_photon_collimator_"+str(i)+"\">\n\t\t<materialref ref=\"G4_CW95\"/>\n\t\t<solidref ref=\"solid_photon_collimator\"/>\n\t</volume>\n")
 
 
 f.write("\t<volume name=\"DS_toroidMother\">\n\t\t<materialref ref=\"G4_Galactic\"/>\n\t\t<solidref ref=\"solid_DS_toroidMother\"/>\n")

@@ -48,7 +48,7 @@ for i in range(0,7):
         logic_s+="\n\t\t<solidref ref=\"solid_s\"/>"
         logic_s+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"magenta\"/>"
         logic_s+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"
-        logic_s+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(3000+i+1)+"\"/>"
+        logic_s+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(4000+i+1)+"\"/>"
         logic_s+="\n\t</volume>\n"
         f.write(logic_s)
             

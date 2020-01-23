@@ -399,11 +399,15 @@ for i in range(0,7):
 
 out+="\n\t</volume>\n"
 out+=("\n</structure>\n")
+
+
+out+="\n<setup name=\"DS_toroidWorld\" version=\"1.0\">"
+out+="\n\t<world ref=\"DS_toroidMother\"/>"
+out+="\n</setup>\n"
+
+out+="\n</gdml>"
+
 f.write(out)
-
-f.write("<setup name=\"DS_toroidWorld\" version=\"1.0\">\n\t<world ref=\"DS_toroidMother\"/>\n</setup>\n")
-
-f.write("</gdml>")
 
 
 

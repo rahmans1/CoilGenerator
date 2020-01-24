@@ -98,23 +98,26 @@ t_photon=70
 f=open(output_file+".gdml", "w+")
 
 
-f.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
-f.write("<gdml\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n\txsi:noNamespaceSchemaLocation=\"http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd\">\n")
-f.write("\n\n<define>\n</define>")
+out="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+out+="<gdml\n"
+out+="\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
+out+="\n\txsi:noNamespaceSchemaLocation=\"http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd\">\n"
+out+="\n\n<define>"
+out+="\n</define>"
 
 
-materials="\n\n<materials>\n"
-materials+="\t<material name=\"G4_CW95\" state=\"solid\">\n"
-materials+="\t\t<D value=\"18.0\" unit=\"g/cm3\"/>\n"
-materials+="\t\t<fraction n=\"0.9500\" ref=\"G4_W\"/>\n"
-materials+="\t\t<fraction n=\"0.015\" ref=\"G4_Cu\"/>\n"
-materials+="\t\t<fraction n=\"0.035\" ref=\"G4_Ni\"/>\n"
-materials+="\t</material>\n"
-materials+="</materials>\n"
-f.write(materials)
+out+="\n\n<materials>\n"
+out+="\t<material name=\"G4_CW95\" state=\"solid\">\n"
+out+="\t\t<D value=\"18.0\" unit=\"g/cm3\"/>\n"
+out+="\t\t<fraction n=\"0.9500\" ref=\"G4_W\"/>\n"
+out+="\t\t<fraction n=\"0.015\" ref=\"G4_Cu\"/>\n"
+out+="\t\t<fraction n=\"0.035\" ref=\"G4_Ni\"/>\n"
+out+="\t</material>\n"
+out+="</materials>\n"
 
 
-out="\n\n<solids>\n"
+
+out+="\n\n<solids>\n"
 out+="\n\t<box name=\"solid_s1_lowerArm\" lunit=\"mm\" x=\""+str(s1_x)+"\" y=\""+str(s1_y)+"\" z=\""+str(s1_l_arm)+"\"/>"
 out+="\n\t<para name=\"solid_s1_upperArm\" lunit=\"mm\" aunit=\"rad\" x=\""+str(s1_x)+"\" y=\""+str(s1_y)+"\" z=\""+str(s1_l_arm)+"\" alpha=\"0\" theta=\""+str(s1_theta)+"\" phi=\"0\"/>"
 out+="\n\t<tube name=\"solid_s1_frontNose\" rmin=\""+str(s1_rad-s1_x)+"\"  rmax=\""+str(s1_rad)+"\" z=\""+str(s1_y)+"\" startphi=\"0\" deltaphi=\"pi\" aunit=\"rad\" lunit=\"mm\"/>\n"
@@ -248,7 +251,8 @@ out+="\n\t</union>\n"
 
 out+="\n\t<union name=\"solid_s4_7\">"
 out+="\n\t\t<first ref=\"solid_s4_6\"/>"
-out+="\n\t\t<second ref=\"solid_s4_low2\"/>\n\t\t<position name=\"pos_s4_7\" x=\""+str(-s4_rad+s4_x/2+(s4_l_arm_low2)/2*math.tan(s4_theta_low1))+"\" y=\""+str(-s4_l_arm_low1-s4_l_arm_low2/2)+"\" z=\""+str(-(s4_y_tb+s4_y_mid)/2)+"\"/>"
+out+="\n\t\t<second ref=\"solid_s4_low2\"/>"
+out+="\n\t\t<position name=\"pos_s4_7\" x=\""+str(-s4_rad+s4_x/2+(s4_l_arm_low2)/2*math.tan(s4_theta_low1))+"\" y=\""+str(-s4_l_arm_low1-s4_l_arm_low2/2)+"\" z=\""+str(-(s4_y_tb+s4_y_mid)/2)+"\"/>"
 out+="\n\t\t<rotation name=\"rot_s4_7\" x=\"pi/2\" y=\"0\" z=\"0\"/>"
 out+="\n\t</union>\n"
 

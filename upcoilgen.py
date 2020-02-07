@@ -25,6 +25,15 @@ f.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
 f.write("<gdml\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n\txsi:noNamespaceSchemaLocation=\"http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd\">\n")
 f.write("\n\n<define>\n</define>")
 
+materials="\n\n<materials>\n"
+materials+="\t<material name=\"G4_CW95\" state=\"solid\">\n"
+materials+="\t\t<D value=\"18.0\" unit=\"g/cm3\"/>\n"
+materials+="\t\t<fraction n=\"0.9500\" ref=\"G4_W\"/>\n"
+materials+="\t\t<fraction n=\"0.015\" ref=\"G4_Cu\"/>\n"
+materials+="\t\t<fraction n=\"0.035\" ref=\"G4_Ni\"/>\n"
+materials+="\t</material>\n"
+materials+="</materials>\n"
+f.write(materials)
 
 f.write("\n\n<solids>\n")
 f.write("\t<box name=\"solid_s_arm_low\" lunit=\"mm\" x=\""+str(s_x)+"\" y=\""+str(s_y)+"\" z=\""+str(s_l_arm)+"\"/>\n")

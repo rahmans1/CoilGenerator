@@ -7,7 +7,7 @@ output_file="showerMaxGen"
 
 ####    radial extent
 
-length_quartz=170.0
+length_quartz=160.0
 length_tungsten=length_quartz
 length_mirror_box_tungstenquartz=length_quartz
 
@@ -19,7 +19,7 @@ thick_mirror_box_tungstenquartz=4*(thick_quartz+thick_tungsten)
 
 ###  width
 
-width_quartz=246.888 
+width_quartz=238#246.888 
 width_tungsten=width_quartz
 width_mirror_box_tungstenquartz=width_quartz
 
@@ -30,7 +30,7 @@ thick_wall_mirror_box_tungstenquartz= 3.302
 
 detector_tilt= 0; #math.pi/3
 
-quartz_rotate=["-pi/2", "pi/2", "-pi/2", "pi/2"]
+quartz_rotate=["pi/2", "-pi/2", "pi/2", "-pi/2"]
 
 ### mirror parameter
 
@@ -47,16 +47,25 @@ thick_mirror_box_top=47.398      # 1.87 inches
 
 length_mirror_box_top=math.sqrt(184.404*184.404-   math.pow((thick_mirror_box_bot-thick_mirror_box_top)/2,2))
 
+length_mirror_box_top=120.0/160.0*length_mirror_box_top
+length_mirror_box_bot=120.0/160.0*length_mirror_box_bot
 
 
 length_logic_mirror_box=length_mirror_box_bot+length_mirror_box_top+pmt_window_extent+pmt_cathode_extent
 
+print(932.5+length_quartz+length_logic_mirror_box)
 
-zstagger=100.0
+
+
+zstagger=(thick_mirror_box_bot+2.0*thick_wall_mirror_box_tungstenquartz)/2-36.243-10 # FIX ME: Hard Code this and chcheck for overlaps
+print(zstagger)
+print(23000-2*(thick_quartz+thick_tungsten)+zstagger)
+print(23000-2*(thick_quartz+thick_tungsten)-zstagger)
 
 len_mother=2*thick_mirror_box_bot+2*zstagger+5
+
 z_origin = 0
-pos=855+length_quartz/2
+pos=932.5+length_quartz/2
 
 f=open(output_file+".gdml", "w+")
 
@@ -131,7 +140,7 @@ out+="\n\t</union>\n"
 
 
 
-out+="\t<cone name=\"solid_upstreamToroidMother\" rmin1=\""+str(600)+"\"  rmax1=\""+str(1900)+"\" rmin2=\""+str(600)+"\" rmax2=\""+str(1900)+"\"  z=\""+str(len_mother)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n" #Make sure this mother volume doesn't interfere with coils
+out+="\t<cone name=\"solid_showerMaxMother\" rmin1=\""+str(600)+"\"  rmax1=\""+str(1900)+"\" rmin2=\""+str(600)+"\" rmax2=\""+str(1900)+"\"  z=\""+str(len_mother)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n" #Make sure this mother volume doesn't interfere with coils
 out+="</solids>\n"
 
 
@@ -184,7 +193,7 @@ for i in range(0,28):
         out+="\t<volume name=\"logic_pmt_window_"+str(i)+"\">"
         out+="\n\t\t<materialref ref=\"G4_Quartz\"/>"
         out+="\n\t\t<solidref ref=\"solid_pmt_window\"/>"
-        out+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"green\"/>"
+        out+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"blue\"/>"
         out+="\n\t</volume>\n"
 
         out+="\t<volume name=\"logic_pmt_cathode_"+str(i)+"\">"
@@ -204,13 +213,13 @@ for i in range(0,28):
                 out+="\t<volume name=\"logic_tungsten_"+str(i)+"_"+str(j)+"\">"
                 out+="\n\t\t<materialref ref=\"G4_W\"/>"
                 out+="\n\t\t<solidref ref=\"solid_tungsten\"/>"
-                out+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"blue\"/>"
+                out+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"red\"/>"
                 out+="\n\t</volume>\n"
 
 
             
         out+="\t<volume name=\"logic_singledet_"+str(i)+"\">"
-        out+="\n\t\t<materialref ref=\"G4_Galactic\"/>"
+        out+="\n\t\t<materialref ref=\"G4_AIR\"/>"
         out+="\n\t\t<solidref ref=\"solid_logic_mirror_box_union\"/>"
         out+="\n\t\t<auxiliary auxtype=\"Alpha\" auxvalue=\"0.0\"/>"
 
@@ -250,22 +259,23 @@ for i in range(0,28):
         for j in range(0,4):
         	out+="\n\t\t<physvol name=\"quartz_"+str(i)+"_"+str(j)+"\">"
         	out+="\n\t\t\t<volumeref ref=\"logic_quartz_"+str(i)+"_"+str(j)+"\"/>"
-        	out+="\n\t\t\t<position name=\"pos_logic_quartz_"+str(i)+"_"+str(j)+"\" x=\""+str(0)+"\" y=\""+str(0)+"\" z=\""+str(-1.5*thick_quartz-2.0*thick_tungsten+j*(thick_quartz+thick_tungsten))+"\"/>"
+        	out+="\n\t\t\t<position name=\"pos_logic_quartz_"+str(i)+"_"+str(j)+"\" x=\""+str(0)+"\" y=\""+str(0)+"\" z=\""+str(1.5*thick_quartz+2.0*thick_tungsten-j*(thick_quartz+thick_tungsten))+"\"/>"
         	out+="\n\t\t\t<rotation name=\"rot_logic_quartz_"+str(i)+"_"+str(j)+"\" x=\""+quartz_rotate[j]+"\" y=\"0\" z=\"0\"/>"        
         	out+="\n\t\t</physvol>"
 
+
                 out+="\n\t\t<physvol name=\"tungsten_"+str(i)+"_"+str(j)+"\">"
                 out+="\n\t\t\t<volumeref ref=\"logic_tungsten_"+str(i)+"_"+str(j)+"\"/>"
-                out+="\n\t\t\t<position name=\"pos_logic_tungsten_"+str(i)+"_"+str(j)+"\" x=\""+str(0)+"\" y=\""+str(0)+"\" z=\""+str(-1.0*thick_quartz-1.5*thick_tungsten+j*(thick_quartz+thick_tungsten))+"\"/>"
+                out+="\n\t\t\t<position name=\"pos_logic_tungsten_"+str(i)+"_"+str(j)+"\" x=\""+str(0)+"\" y=\""+str(0)+"\" z=\""+str(1.5*thick_tungsten+1.0*thick_quartz-j*(thick_quartz+thick_tungsten))+"\"/>"
                 out+="\n\t\t\t<rotation name=\"rot_logic_tungsten_"+str(i)+"_"+str(j)+"\" x=\"0\" y=\"0\" z=\"0\"/>"
                 out+="\n\t\t</physvol>"
 
         out+="\n\t</volume>\n"
         
 
-out+="\t<volume name=\"upstreamToroidMother\">"
-out+="\n\t\t<materialref ref=\"G4_Galactic\"/>"
-out+="\n\t\t<solidref ref=\"solid_upstreamToroidMother\"/>"
+out+="\t<volume name=\"showerMaxMother\">"
+out+="\n\t\t<materialref ref=\"G4_AIR\"/>"
+out+="\n\t\t<solidref ref=\"solid_showerMaxMother\"/>"
 out+="\n\t\t<auxiliary auxtype=\"Alpha\" auxvalue=\"0.0\"/>"
 
 for i in range(0,28):
@@ -288,8 +298,8 @@ out+="\n\t</volume>"
 
 out+="\n</structure>\n"
 
-out+="<setup name=\"upstreamToroidWorld\" version=\"1.0\">"
-out+="\n\t<world ref=\"upstreamToroidMother\"/>"
+out+="<setup name=\"showerMaxWorld\" version=\"1.0\">"
+out+="\n\t<world ref=\"showerMaxMother\"/>"
 out+="\n</setup>\n"
 
 out+="</gdml>"

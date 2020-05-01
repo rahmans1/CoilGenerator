@@ -27,7 +27,7 @@ with open(args.par_list) as csvfile:
 
 s={}      # race track 
 
-# segment 1
+# segment 1,2,3
 for i in range(1,4):
   s["C"+str(i)+"_l_arm"]= p["C"+str(i)+"_z2_up"]-p["C"+str(i)+"_z1_up"]
   s["C"+str(i)+"_theta_low"]= math.atan((p["C"+str(i)+"_x2_low"]-p["C"+str(i)+"_x1_low"])/(s["C"+str(i)+"_l_arm"])) #
@@ -40,6 +40,26 @@ for i in range(1,4):
   s["C"+str(i)+"_h"]=2*s["C"+str(i)+"_rad_front"]
   s["C"+str(i)+"_l"]= s["C"+str(i)+"_l_arm"]+s["C"+str(i)+"_rad_front"]+s["C"+str(i)+"_rad_back"]
   s["C"+str(i)+"_w"]= s["C"+str(i)+"_dy"]
+  p["C"+str(i)+"_xoff"]=p["C"+str(i)+"_x1_low"] + s["C"+str(i)+"_rad_front"]
+  p["C"+str(i)+"_rpos"]=p["C"+str(i)+"_x1_low"]+s["C"+str(i)+"_rad_front"]
+  p["C"+str(i)+"_zpos"]=p["C"+str(i)+"_z1_up"]+s["C"+str(i)+"_l_arm"]/2-13000
+
+p["C4_xoff"]= p["C4_tb_1_x1_low"]+(p["C4_tb_1_x1_up"]-p["C4_tb_1_x1_low"])/2
+p["C4_zpos"]= p["C4_tb_1_z1_low"]+ 500-13000
+p["C4_rpos"]= p["C4_tb_1_x1_low"]+ (p["C4_tb_1_x2_up"]-p["C4_tb_1_x1_low"])/2
+s["C4_l_arm"]=1000
+
+for i in range(1,2):
+  for j in ["mid", "tb"]:
+     s["C4_"+j+"_"+str(i)+"_rad_front"]= (p["C4_"+j+"_"+str(i)+"_x1_up"]-p["C4_"+j+"_"+str(i)+"_x1_low"])/2.0
+     s["C4_"+j+"_"+str(i)+"_dx"]= p["C4_"+j+"_dx"]
+     s["C4_"+j+"_"+str(i)+"_dy"]= p["C4_"+j+"_dy"]
+ # print("C4_"+j+"_"+str(i)+" has length of upper arm "+str(s["C4_"+j+"_"+str(i)+"_l_arm_up"])+",\nangle of lower arm "+ str(s["C"+str(i)+"_theta_low"])+",\n angle of upper arm "+str( s["C"+str(i)+"_theta_up"])+",\n radius of front nose "+str(s["C"+str(i)+"_rad_front"])+",\n radius of back nose "+str( s["C"+str(i)+"_rad_back"])+",\n x-cross-section "+str( s["C"+str(i)+"_dx"])+",\n y-cross-section "+str(s["C"+str(i)+"_dy"])+"\n")
+      
+
+
+
+
 
 r_inner_mother=38
 r_outer_mother=420
@@ -110,6 +130,48 @@ for i in range(1,4):
   ### individual coil mother
   out+="\n\t<box name=\"solid_DScoil_"+str(i)+"\" lunit=\"mm\" x=\""+str(s["C"+str(i)+"_h"])+"\" y=\""+str(s["C"+str(i)+"_w"])+"\" z=\""+str(s["C"+str(i)+"_l"])+"\"/>"
 
+for i in range(1,2):
+  for j in ["tb", "mid"]:
+     out+="\n\t<xtru name=\"solid_C4_"+j+"_"+str(i)+"_outer\"  lunit=\"mm\">"
+     out+="\n\t\t<twoDimVertex x=\""+str(p["C4_"+j+"_"+str(i)+"_x2_up"]-p["C4_xoff"])+"\" y=\""+str(p["C4_"+j+"_"+str(i)+"_z2_up"]-p["C4_"+j+"_"+str(i)+"_z1_up"])+"\" />"
+     out+="\n\t\t<twoDimVertex x=\""+str(p["C4_"+j+"_"+str(i)+"_x1_up"]-p["C4_xoff"])+"\" y=\""+str(p["C4_"+j+"_"+str(i)+"_z1_up"]-p["C4_"+j+"_"+str(i)+"_z1_up"])+"\" />"
+     out+="\n\t\t<twoDimVertex x=\""+str(p["C4_"+j+"_"+str(i)+"_x1_low"]-p["C4_xoff"])+"\" y=\""+str(p["C4_"+j+"_"+str(i)+"_z1_low"]-p["C4_"+j+"_"+str(i)+"_z1_up"])+"\" />"
+     out+="\n\t\t<twoDimVertex x=\""+str(p["C4_"+j+"_"+str(i)+"_x2_low"]-p["C4_xoff"])+"\" y=\""+str(p["C4_"+j+"_"+str(i)+"_z2_low"]-p["C4_"+j+"_"+str(i)+"_z1_up"])+"\" />"
+     out+="\n\t\t<section zOrder=\"1\" zPosition=\""+str(-p["C4_"+j+"_dy"]/2)+"\"/>"
+     out+="\n\t\t<section zOrder=\"2\" zPosition=\""+str(p["C4_"+j+"_dy"]/2)+"\"/>"
+     out+="</xtru>\n"
+
+out+="\n\t<tube name=\"solid_C4_front_outer\" rmin=\""+str(0)+"\" rmax=\""+str((p["C4_tb_1_x1_up"]-p["C4_tb_1_x1_low"])/2.0)+"\" z=\""+str(p["C4_tb_dy"])+"\" startphi=\"0\" deltaphi=\"pi\" aunit=\"rad\" lunit=\"mm\"/>\n"
+
+
+out+="\n\t<union name=\"solid_C4\">"
+out+="\n\t\t<first ref=\"solid_C4_front_outer\"/>"
+out+="\n\t\t<second ref=\"solid_C4_tb_1_outer\"/>"
+out+="\n\t\t<position name=\"pos_C4_tb_1_outer\" x=\""+str(0)+"\" y=\""+str(0)+"\" z=\"0\"/>"
+out+="\n\t\t<rotation name=\"rot_C4_tb_1_outer\" x=\"pi\" y=\"0\" z=\"0\"/>"
+out+="\n\t</union>\n"
+
+
+out+="\n\t<scaledSolid name=\"scaled_solid_C4\">"
+out+="\n\t\t<solidref ref=\"solid_C4\"/>"
+out+="\n\t\t<scale name=\"solid_C4_scale\" x=\"2\" y=\"2\" z=\"2\"/>"
+out+="\n\t</scaledSolid>\n"
+
+
+out+="\n\t<box name=\"solid_DScoil_4\" lunit=\"mm\" x=\""+str(1000)+"\" y=\""+str(1000)+"\" z=\""+str(1000)+"\"/>n"
+
+
+
+
+
+"""
+for i in range(1,4):
+ for j in ["tb", "mid"]:
+    out+="\n\t<para name=\"solid_C4_"+j+"_"+str(i)+"_low\" lunit=\"mm\" aunit=\"rad\" x=\""+str( s["C4_"+j+"_"+str(i)+"_dx"])+"\" y=\""+str( s["C4_"+j+"_"+str(i)+"_dy"])+"\" z=\""+str(s["C4_"+j+"_"+str(i)+"_l_arm_low"])+"\" alpha=\"0\" theta=\""+str(s["C4_"+j+"_"+str(i)+"_theta_low"])+"\" phi=\"0\"/>"
+    out+="\n\t<para name=\"solid_C4_"+j+"_"+str(i)+"_up\" lunit=\"mm\" aunit=\"rad\" x=\""+str( s["C4_"+j+"_"+str(i)+"_dx"])+"\" y=\""+str( s["C4_"+j+"_"+str(i)+"_dy"])+"\" z=\""+str(s["C4_"+j+"_"+str(i)+"_l_arm_up"])+"\" alpha=\"0\" theta=\""+str(s["C4_"+j+"_"+str(i)+"_theta_up"])+"\" phi=\"0\"/>"
+    out+="\n\t<tube name=\"solid_C4_"+j+"_"+str(i)+"_front\" rmin=\""+str(s["C4_"+j+"_"+str(i)+"_rad_front"]-s["C4_"+j+"_"+str(i)+"_dx"])+"\" rmax=\""+str(s["C4_"+j+"_"+str(i)+"_rad_front"])+"\" z=\""+str(s["C4_"+j+"_"+str(i)+"_dy"])+"\" startphi=\"0\" deltaphi=\"pi\" aunit=\"rad\" lunit=\"mm\"/>\n"
+"""
+
 ### hybrid toroid mother
 out+="\n\t<tube name=\"solid_DS_toroidMother\" rmin=\""+str(r_inner_mother)+"\"  rmax=\""+str(r_outer_mother)+"\" z=\""+str(l_mother)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n"
 
@@ -119,10 +181,13 @@ out+="\n</solids>\n"
 out+="\n\n<structure>\n"
 
 for i in range(1,8):
-   for j in range(1,4):
+   for j in range(1,5):
         out+="\n\t<volume name=\"logic_C"+str(j)+"_"+str(i)+"\">"
         out+="\n\t\t<materialref ref=\"G4_Cu\"/>"
-        out+="\n\t\t<solidref ref=\"solid_C"+str(j)+"\"/>"
+        if not (j==4):
+           out+="\n\t\t<solidref ref=\"solid_C"+str(j)+"\"/>"
+        else:
+           out+="\n\t\t<solidref ref=\"scaled_solid_C"+str(j)+"\"/>"
         out+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"magenta\"/>"
         out+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"
         out+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(3000+i)+"\"/>"
@@ -147,12 +212,12 @@ out+="\n\t\t<solidref ref=\"solid_DS_toroidMother\"/>"
 out+="\n\t\t<auxiliary auxtype=\"Alpha\" auxvalue=\"0.0\"/>"
 
 for i in range(1,8):
-    for j in range(1,4):
-        rpos=p["C"+str(j)+"_x1_low"]+s["C"+str(j)+"_rad_front"]
+    for j in range(1,5):
+        rpos=p["C"+str(j)+"_rpos"]
         theta=2*i*math.pi/7
         xpos=rpos*(math.cos(theta))
         ypos=rpos*(math.sin(theta))
-        zpos= p["C"+str(j)+"_z1_up"]+s["C"+str(j)+"_l_arm"]/2-13000
+        zpos= p["C"+str(j)+"_zpos"]
         out+="\n\t\t<physvol name=\"DScoil_"+str(j)+"_"+str(i)+"\">"
         out+="\n\t\t\t<volumeref ref=\"logic_DScoil_"+str(j)+"_"+str(i)+"\"/>"
         out+="\n\t\t\t<position name=\"pos_DScoil_"+str(j)+"_"+str(i)+"\" x=\""+str(xpos)+"\" y=\""+str(ypos)+"\" z=\""+str(zpos)+"\"/>"

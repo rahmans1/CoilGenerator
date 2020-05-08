@@ -24,42 +24,34 @@ with open(args.par_list) as csvfile:
      for row in reader:
          p[row[0]]=float(row[1])
 
- 
+p["C_COM"]=abs(p["C1_z1_up"]-p["C4_mid_z2_up"])/2 +p["C1_z1_up"]
 for i in range(1,4):
   p["C"+str(i)+"_l_arm"]= p["C"+str(i)+"_z2_up"]-p["C"+str(i)+"_z1_up"]
   p["C"+str(i)+"_rad_front"]= (p["C"+str(i)+"_x1_up"]-p["C"+str(i)+"_x1_low"])/2.0
   p["C"+str(i)+"_rad_back"]= (p["C"+str(i)+"_x2_up"]-p["C"+str(i)+"_x2_low"])/2.0
   p["C"+str(i)+"_rpos"]=p["C"+str(i)+"_x1_low"]+ p["C"+str(i)+"_rad_front"]
-  p["C"+str(i)+"_zpos"]=p["C"+str(i)+"_z1_up"]+p["C"+str(i)+"_l_arm"]/2-13000   ## The 13000 needs to be the distance between the center of the daughter volume and the mother volume
+  p["C"+str(i)+"_zpos"]=p["C"+str(i)+"_z1_up"]+p["C"+str(i)+"_l_arm"]/2-p["C_COM"]   ## The 13000 needs to be the distance between the center of the daughter volume and the mother volume
+  
+
 
 for i in ["tb", "mid"]:
   p["C4_"+str(i)+"_l_arm"]= p["C4_"+str(i)+"_z2_up"]-p["C4_"+str(i)+"_z1_up"]
   p["C4_"+str(i)+"_rad_front"]= (p["C4_"+str(i)+"_x1_up"]-p["C4_"+str(i)+"_x1_low"])/2.0
   p["C4_"+str(i)+"_rad_back"]= (p["C4_"+str(i)+"_x2_up"]-p["C4_"+str(i)+"_x2_low"])/2.0
   p["C4_"+str(i)+"_rpos"]=p["C4_"+str(i)+"_x1_low"]+ p["C4_"+str(i)+"_rad_front"]
-  p["C4_"+str(i)+"_zpos"]=p["C4_"+str(i)+"_z1_up"]+p["C4_"+str(i)+"_l_arm"]/2-13000 
-
+  p["C4_"+str(i)+"_zpos"]=p["C4_"+str(i)+"_z1_up"]+p["C4_"+str(i)+"_l_arm"]/2-p["C_COM"] 
+print(p["C_COM"])
 p["C4_rpos"]= p["C4_mid_rpos"]
 p["C4_zpos"]= p["C4_mid_zpos"]
 
-r_inner_mother=0
-r_outer_mother=420
-l_mother=8000
-
-out=""
-
-out+="\n\n<materials>\n"
-out+="\t<material name=\"G4_CW95\" state=\"solid\">\n"
-out+="\t\t<D value=\"18.0\" unit=\"g/cm3\"/>\n"
-out+="\t\t<fraction n=\"0.9500\" ref=\"G4_W\"/>\n"
-out+="\t\t<fraction n=\"0.015\" ref=\"G4_Cu\"/>\n"
-out+="\t\t<fraction n=\"0.035\" ref=\"G4_Ni\"/>\n"
-out+="\t</material>\n"
-out+="</materials>\n"
+r_inner_mother=p["C1_x1_low"]-2
+r_outer_mother=p["C4_mid_x2_up"]+2
+l_mother=2*( p["C_COM"] - p["C1_z1_up"])+p["C1_rad_front"]+p["C4_mid_rad_back"]+100
 
 
-
-out+="\n\n<solids>\n"
+print(r_inner_mother)
+print(r_outer_mother)
+print(l_mother)
 
 
 
@@ -72,6 +64,31 @@ out+="\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
 out+="\n\txsi:noNamespaceSchemaLocation=\"http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd\">\n"
 out+="\n\n<define>"
 out+="\n</define>"
+
+out+="\n\n<materials>\n"
+out+="\t<material name=\"G4_CW95\" state=\"solid\">\n"
+out+="\t\t<D value=\"18.0\" unit=\"g/cm3\"/>\n"
+out+="\t\t<fraction n=\"0.9500\" ref=\"G4_W\"/>\n"
+out+="\t\t<fraction n=\"0.015\" ref=\"G4_Cu\"/>\n"
+out+="\t\t<fraction n=\"0.035\" ref=\"G4_Ni\"/>\n"
+out+="\t</material>\n"
+out+="\t<material name=\"Epoxy\" state=\"solid\">\n"
+out+="\t\t<D value=\"1.3\" unit=\"g/cm3\"/>\n"
+out+="\t\t<fraction n=\"0.5354\" ref=\"C\"/>\n"
+out+="\t\t<fraction n=\"0.1318\" ref=\"H\"/>\n"
+out+="\t\t<fraction n=\"0.3328\" ref=\"O\"/>\n"
+out+="\t</material>\n"
+out+="\t<material name=\"G10\" state=\"solid\">\n"
+out+="\t\t<D value=\"1.3\" unit=\"g/cm3\"/>\n"
+out+="\t\t<fraction n=\"0.773\" ref=\"G4_SILICON_DIOXIDE\"/>\n"
+out+="\t\t<fraction n=\"0.147\" ref=\"Epoxy\"/>\n"
+out+="\t\t<fraction n=\"0.080\" ref=\"G4_Cl\"/>\n"
+out+="\t</material>\n"
+out+="</materials>\n"
+
+
+
+
 
 out+="\n\n<solids>\n"
 
@@ -137,11 +154,13 @@ for j in ["mid","tb"]:
   for i in ["C4_", "outer_E4_","inner_E4_"]:
     out+="\n\t<xtru name=\"solid_"+i+str(j)+"_mid\"  lunit=\"mm\">"
     out+="\n\t\t<twoDimVertex x=\""+str(xoff[i+str(j)]+ p["C4_"+str(j)+"_x2_up"]-p["C4_"+str(j)+"_rpos"])+"\" y=\""+str(p["C4_"+str(j)+"_z2_up"]-p["C4_"+str(j)+"_z1_up"])+"\" />"
-    for k in range(3,23):
-      out+="\n\t\t<twoDimVertex x=\""+str(xoff[i+str(j)]+ p["C"+str(j)+"_x"+str(k)+"_up"]-p["C"+str(j)+"_rpos"])+"\" y=\""+str(p["C"+str(j)+"_z"+str(k)+"_up"]-p["C"+str(j)+"_z1_up"])+"\" />"
+    for k in reversed(range(3,23)):
+      out+="\n\t\t<twoDimVertex x=\""+str(xoff[i+str(j)]+ p["C4_"+str(j)+"_x"+str(k)+"_up"]-p["C4_"+str(j)+"_rpos"])+"\" y=\""+str(p["C4_"+str(j)+"_z"+str(k)+"_up"]-p["C4_"+str(j)+"_z1_up"])+"\" />"
 
     out+="\n\t\t<twoDimVertex x=\""+str(xoff[i+str(j)]+ p["C4_"+str(j)+"_x1_up"]-p["C4_"+str(j)+"_rpos"])+"\" y=\""+str(p["C4_"+str(j)+"_z1_up"]-p["C4_"+str(j)+"_z1_up"])+"\" />"
     out+="\n\t\t<twoDimVertex x=\""+str(-xoff[i+str(j)]+ p["C4_"+str(j)+"_x1_low"]-p["C4_"+str(j)+"_rpos"])+"\" y=\""+str(p["C4_"+str(j)+"_z1_low"]-p["C4_"+str(j)+"_z1_up"])+"\" />"
+    for k in range(3,5):
+      out+="\n\t\t<twoDimVertex x=\""+str(-xoff[i+str(j)]+ p["C4_"+str(j)+"_x"+str(k)+"_low"]-p["C4_"+str(j)+"_rpos"])+"\" y=\""+str(p["C4_"+str(j)+"_z"+str(k)+"_low"]-p["C4_"+str(j)+"_z1_up"])+"\" />"
     out+="\n\t\t<twoDimVertex x=\""+str(-xoff[i+str(j)]+ p["C4_"+str(j)+"_x2_low"]-p["C4_"+str(j)+"_rpos"])+"\" y=\""+str(p["C4_"+str(j)+"_z2_low"]-p["C4_"+str(j)+"_z1_up"])+"\" />"
     out+="\n\t\t<section zOrder=\"1\" zPosition=\""+str(-yoff[i+str(j)]-p["C4_"+str(j)+"_dy"]/2)+"\"/>"
     out+="\n\t\t<section zOrder=\"2\" zPosition=\""+str(yoff[i+str(j)]+p["C4_"+str(j)+"_dy"]/2)+"\"/>"
@@ -213,7 +232,7 @@ for i in range(1,8):
    ### Setting up coils
    for j in range(1,4):
         out+="\n\t<volume name=\"logic_inner_E"+str(j)+"_"+str(i)+"\">"
-        out+="\n\t\t<materialref ref=\"G4_Cu\"/>"
+        out+="\n\t\t<materialref ref=\"G10\"/>"
         out+="\n\t\t<solidref ref=\"solid_inner_E"+str(j)+"\"/>"
         out+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"orange\"/>"
         out+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"
@@ -233,7 +252,7 @@ for i in range(1,8):
         out+="\n\t</volume>\n"
 
         out+="\n\t<volume name=\"logic_outer_E"+str(j)+"_"+str(i)+"\">"
-        out+="\n\t\t<materialref ref=\"G4_Cu\"/>"
+        out+="\n\t\t<materialref ref=\"G10\"/>"
         out+="\n\t\t<solidref ref=\"solid_outer_E"+str(j)+"\"/>"
         out+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"orange\"/>"
         out+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"
@@ -264,7 +283,7 @@ for i in range(1,8):
 
    for j in ["top", "topmid", "botmid", "bot"]:
         out+="\n\t<volume name=\"logic_inner_E4_"+str(j)+"_"+str(i)+"\">"
-        out+="\n\t\t<materialref ref=\"G4_Cu\"/>"
+        out+="\n\t\t<materialref ref=\"G10\"/>"
         out+="\n\t\t<solidref ref=\"solid_inner_E4_"+str(realsol[j])+"\"/>"
         out+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"orange\"/>"
         out+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"
@@ -285,7 +304,7 @@ for i in range(1,8):
 
 
    out+="\n\t<volume name=\"logic_outer_E4_"+str(i)+"\">"
-   out+="\n\t\t<materialref ref=\"G4_Cu\"/>"
+   out+="\n\t\t<materialref ref=\"G10\"/>"
    out+="\n\t\t<solidref ref=\"solid_outer_E4\"/>"
    out+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"orange\"/>"
    out+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"

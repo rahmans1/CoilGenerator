@@ -24,6 +24,7 @@ with open(args.par_list) as csvfile:
      for row in reader:
          p[row[0]]=float(row[1])
 
+p["C_COM"]=abs(p["C_z1_up"]-p["C_z2_up"])/2 +p["C_z1_up"]
  
 p["C_l_arm"]= p["C_z2_up"]-p["C_z1_up"]
 p["C_rad_front"]= (p["C_x1_up"]-p["C_x1_low"])/2.0
@@ -32,24 +33,15 @@ p["C_rpos"]=p["C_x1_low"]+ p["C_rad_front"]
 p["C_zpos"]=p["C_z1_up"]+p["C_l_arm"]/2-7000   ## The 7000 needs to be the center of the mother volume
 
 
-r_inner_mother=20
-r_outer_mother=420
-l_mother=8000
 
-out=""
-
-out+="\n\n<materials>\n"
-out+="\t<material name=\"G4_CW95\" state=\"solid\">\n"
-out+="\t\t<D value=\"18.0\" unit=\"g/cm3\"/>\n"
-out+="\t\t<fraction n=\"0.9500\" ref=\"G4_W\"/>\n"
-out+="\t\t<fraction n=\"0.015\" ref=\"G4_Cu\"/>\n"
-out+="\t\t<fraction n=\"0.035\" ref=\"G4_Ni\"/>\n"
-out+="\t</material>\n"
-out+="</materials>\n"
+r_inner_mother=p["C_x1_low"]-2
+r_outer_mother=p["C_x2_up"]+2
+l_mother=2*( p["C_COM"] - p["C_z1_up"])+p["C_rad_front"]+p["C_rad_back"]+100
 
 
-
-out+="\n\n<solids>\n"
+print(r_inner_mother)
+print(r_outer_mother)
+print(l_mother)
 
 
 
@@ -62,6 +54,31 @@ out+="\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
 out+="\n\txsi:noNamespaceSchemaLocation=\"http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd\">\n"
 out+="\n\n<define>"
 out+="\n</define>"
+
+out+="\n\n<materials>\n"
+out+="\t<material name=\"G4_CW95\" state=\"solid\">\n"
+out+="\t\t<D value=\"18.0\" unit=\"g/cm3\"/>\n"
+out+="\t\t<fraction n=\"0.9500\" ref=\"G4_W\"/>\n"
+out+="\t\t<fraction n=\"0.015\" ref=\"G4_Cu\"/>\n"
+out+="\t\t<fraction n=\"0.035\" ref=\"G4_Ni\"/>\n"
+out+="\t</material>\n"
+out+="\t<material name=\"Epoxy\" state=\"solid\">\n"
+out+="\t\t<D value=\"1.3\" unit=\"g/cm3\"/>\n"
+out+="\t\t<fraction n=\"0.5354\" ref=\"C\"/>\n"
+out+="\t\t<fraction n=\"0.1318\" ref=\"H\"/>\n"
+out+="\t\t<fraction n=\"0.3328\" ref=\"O\"/>\n"
+out+="\t</material>\n"
+out+="\t<material name=\"G10\" state=\"solid\">\n"
+out+="\t\t<D value=\"1.3\" unit=\"g/cm3\"/>\n"
+out+="\t\t<fraction n=\"0.773\" ref=\"G4_SILICON_DIOXIDE\"/>\n"
+out+="\t\t<fraction n=\"0.147\" ref=\"Epoxy\"/>\n"
+out+="\t\t<fraction n=\"0.080\" ref=\"G4_Cl\"/>\n"
+out+="\t</material>\n"
+out+="</materials>\n"
+
+
+
+
 
 out+="\n\n<solids>\n"
 
@@ -116,7 +133,7 @@ out+="\n\n<structure>\n"
 for i in range(1,8):
    ### Setting up coils
         out+="\n\t<volume name=\"logic_inner_E_"+str(i)+"\">"
-        out+="\n\t\t<materialref ref=\"G4_Cu\"/>"
+        out+="\n\t\t<materialref ref=\"G10\"/>"
         out+="\n\t\t<solidref ref=\"solid_inner_E\"/>"
         out+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"orange\"/>"
         out+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"
@@ -136,7 +153,7 @@ for i in range(1,8):
         out+="\n\t</volume>\n"
 
         out+="\n\t<volume name=\"logic_outer_E_"+str(i)+"\">"
-        out+="\n\t\t<materialref ref=\"G4_Cu\"/>"
+        out+="\n\t\t<materialref ref=\"G10\"/>"
         out+="\n\t\t<solidref ref=\"solid_outer_E\"/>"
         out+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"orange\"/>"
         out+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"

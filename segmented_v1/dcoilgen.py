@@ -54,6 +54,19 @@ print(r_outer_mother)
 print(l_mother)
 
 
+# photon collimator
+r_inner_photon=74.22
+r_outer_photon=180.22
+r_extent_photon=r_outer_photon-r_inner_photon
+h_inner_photon=2*18.25
+h_outer_photon=2*54.15
+r_inner_sub_photon=116.38
+r_extent_sub_photon=r_outer_photon-r_inner_sub_photon
+h_inner_sub_photon=2*12.75
+h_outer_sub_photon=2*29.15
+t_photon=70
+
+
 
 f=open(output_file+".gdml", "w+")
 
@@ -92,6 +105,20 @@ out+="</materials>\n"
 
 out+="\n\n<solids>\n"
 
+
+#photon collimator solid
+out+="\n\t<xtru name=\"solid_photon_collimator\" lunit=\"mm\">"
+out+="\n\t\t<twoDimVertex x=\""+str(-r_extent_photon/2)+"\" y=\""+str(h_inner_photon/2)+"\"/>"
+out+="\n\t\t<twoDimVertex x=\""+str(-r_extent_photon/2)+"\" y=\""+str(-h_inner_photon/2)+"\"/>"
+out+="\n\t\t<twoDimVertex x=\""+str(r_extent_photon/2)+"\" y=\""+str(-h_outer_photon/2)+"\"/>"
+out+="\n\t\t<twoDimVertex x=\""+str(r_extent_photon/2)+"\" y=\""+str(-h_outer_sub_photon/2)+"\"/>"
+out+="\n\t\t<twoDimVertex x=\""+str(r_extent_photon/2-r_extent_sub_photon)+"\" y=\""+str(-h_inner_sub_photon/2)+"\"/>"
+out+="\n\t\t<twoDimVertex x=\""+str(r_extent_photon/2-r_extent_sub_photon)+"\" y=\""+str(h_inner_sub_photon/2)+"\"/>"
+out+="\n\t\t<twoDimVertex x=\""+str(r_extent_photon/2)+"\" y=\""+str(h_outer_sub_photon/2)+"\"/>"
+out+="\n\t\t<twoDimVertex x=\""+str(r_extent_photon/2)+"\" y=\""+str(h_outer_photon/2)+"\"/>"
+out+="\n\t\t<section zOrder=\"1\" zPosition=\""+str(-t_photon/2)+"\" xOffset=\"0\" yOffset=\"0\" scalingFactor=\"1\"/>"
+out+="\n\t\t<section zOrder=\"2\" zPosition=\""+str(t_photon/2)+"\" xOffset=\"0\" yOffset=\"0\" scalingFactor=\"1\"/>"
+out+="\n\t</xtru>\n"
 
 
 
@@ -229,6 +256,15 @@ out+="\n</solids>\n"
 out+="\n\n<structure>\n"
 
 for i in range(1,8):
+   #Setting up photon collimator
+   out+="\n\t<volume name=\"logic_photon_collimator_"+str(i)+"\">"
+   out+="\n\t\t<materialref ref=\"G4_CW95\"/>"
+   out+="\n\t\t<solidref ref=\"solid_photon_collimator\"/>"
+   out+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"
+   out+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(2005)+"\"/>"
+   out+="\n\t</volume>\n"
+
+
    ### Setting up coils
    for j in range(1,4):
         out+="\n\t<volume name=\"logic_inner_E"+str(j)+"_"+str(i)+"\">"
@@ -236,7 +272,7 @@ for i in range(1,8):
         out+="\n\t\t<solidref ref=\"solid_inner_E"+str(j)+"\"/>"
         out+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"orange\"/>"
         out+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"
-        out+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(4007+i)+"\"/>"
+        out+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(3007+i)+"\"/>"
         out+="\n\t</volume>\n"
 
         out+="\n\t<volume name=\"logic_C"+str(j)+"_"+str(i)+"\">"
@@ -244,7 +280,7 @@ for i in range(1,8):
         out+="\n\t\t<solidref ref=\"solid_C"+str(j)+"\"/>"
         out+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"magenta\"/>"
         out+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"
-        out+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(4000+i)+"\"/>"
+        out+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(3000+i)+"\"/>"
         out+="\n\t\t\t<physvol name=\"inner_E"+str(j)+"\">"
         out+="\n\t\t\t\t<volumeref ref=\"logic_inner_E"+str(j)+"_"+str(i)+"\"/>"
         out+="\n\t\t\t\t<rotation name=\"rot_inner_E\" y=\"0\" aunit=\"rad\" />"
@@ -256,7 +292,7 @@ for i in range(1,8):
         out+="\n\t\t<solidref ref=\"solid_outer_E"+str(j)+"\"/>"
         out+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"orange\"/>"
         out+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"
-        out+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(4007+i)+"\"/>"
+        out+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(3007+i)+"\"/>"
         out+="\n\t\t\t<physvol name=\"C"+str(j)+"\">"
         out+="\n\t\t\t\t<volumeref ref=\"logic_C"+str(j)+"_"+str(i)+"\"/>"
         out+="\n\t\t\t</physvol>\n"
@@ -287,7 +323,7 @@ for i in range(1,8):
         out+="\n\t\t<solidref ref=\"solid_inner_E4_"+str(realsol[j])+"\"/>"
         out+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"orange\"/>"
         out+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"
-        out+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(4007+i)+"\"/>"
+        out+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(3007+i)+"\"/>"
         out+="\n\t</volume>\n"
 
         out+="\n\t<volume name=\"logic_C4_"+str(j)+"_"+str(i)+"\">"
@@ -295,7 +331,7 @@ for i in range(1,8):
         out+="\n\t\t<solidref ref=\"solid_C4_"+str(realsol[j])+"\"/>"
         out+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"magenta\"/>"
         out+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"
-        out+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(4000+i)+"\"/>"
+        out+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(3000+i)+"\"/>"
         out+="\n\t\t\t<physvol name=\"inner_E4_"+str(j)+"\">"
         out+="\n\t\t\t\t<volumeref ref=\"logic_inner_E4_"+str(j)+"_"+str(i)+"\"/>"
         out+="\n\t\t\t\t<rotation name=\"rot_inner_E4_\" y=\"0\" aunit=\"rad\" />"
@@ -308,7 +344,7 @@ for i in range(1,8):
    out+="\n\t\t<solidref ref=\"solid_outer_E4\"/>"
    out+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"orange\"/>"
    out+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"
-   out+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(4007+i)+"\"/>"
+   out+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(3007+i)+"\"/>"
 
    
    for j in ["top", "bot", "topmid","botmid"]:
@@ -327,7 +363,7 @@ out+="\n\t\t<materialref ref=\"G4_Galactic\"/>"
 out+="\n\t\t<solidref ref=\"solid_DS_toroidMother\"/>"
 out+="\n\t\t<auxiliary auxtype=\"Alpha\" auxvalue=\"0.0\"/>"
 
-for i in range(1,2):
+for i in range(1,8):
    for j in range(1,5):
         rpos=p["C"+str(j)+"_rpos"]
         theta=2*(i-1)*math.pi/7
@@ -339,6 +375,21 @@ for i in range(1,2):
         out+="\n\t\t\t<position name=\"pos_dcoil"+str(j)+"_"+str(i)+"\" x=\""+str(xpos)+"\" y=\""+str(ypos)+"\" z=\""+str(zpos)+"\"/>"
         out+="\n\t\t\t<rotation name=\"rot_dcoil"+str(j)+"_"+str(i)+"\" x=\"0\" y=\"0\" z=\""+str(-theta)+"\"/>"
         out+="\n\t\t</physvol>\n"
+
+
+   rpos=r_inner_photon+r_extent_photon/2
+   theta=2*i*math.pi/7+2*math.pi/14
+   xpos=rpos*(math.cos(theta))
+   ypos=rpos*(math.sin(theta))
+   zpos=12835-p["C_COM"]
+   print(rpos)
+   out+="\n\t\t<physvol name=\"photon_collimator_"+str(i)+"\">"
+   out+="\n\t\t\t<volumeref ref=\"logic_photon_collimator_"+str(i)+"\"/>"
+   out+="\n\t\t\t<position name=\"pos_photon_collimator_"+str(i)+"\" x=\""+str(xpos)+"\" y=\""+str(ypos)+"\" z=\""+str(zpos)+"\"/>"
+   out+="\n\t\t\t<rotation name=\"rot_photon_collimator_"+str(i)+"\" x=\""+str(0)+"\" y=\"0\" z=\""+str(-theta)+"\"/>"
+   out+="\n\t\t</physvol>\n"
+
+
 
 out+="\n\t</volume>\n"
 out+="\n</structure>\n"

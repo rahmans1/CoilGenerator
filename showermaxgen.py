@@ -52,7 +52,8 @@ length_mirror_box_bot=120.0/160.0*length_mirror_box_bot
 
 
 length_logic_mirror_box=length_mirror_box_bot+length_mirror_box_top+pmt_window_extent+pmt_cathode_extent
-
+print(length_mirror_box_bot)
+print(length_mirror_box_top)
 print(932.5+length_quartz+length_logic_mirror_box)
 
 

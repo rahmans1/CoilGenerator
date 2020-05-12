@@ -58,7 +58,7 @@ print(l_mother)
 r_inner_photon=74.22
 r_outer_photon=180.22
 r_extent_photon=r_outer_photon-r_inner_photon
-h_inner_photon=2*18.25
+h_inner_photon=2*17.25#2*18.25
 h_outer_photon=2*54.15
 r_inner_sub_photon=116.38
 r_extent_sub_photon=r_outer_photon-r_inner_sub_photon

@@ -103,23 +103,19 @@ for i in ["C", "outer_E","inner_E"]:
   out+="\n\t<tube name=\"solid_"+i+"_back\" rmin=\"0\" rmax=\""+str(xoff[i]+p["C_rad_back"])+"\" z=\""+str(2*yoff[i]+p["C_dy"])+"\" startphi=\"0\" deltaphi=\"pi\" aunit=\"rad\" lunit=\"mm\"/>\n"
  
   ### Making unions
-  out+="\n\t<multiUnion name=\"solid_"+i+"\">"
-  out+="\n\t\t<multiUnionNode name=\"node_solid_"+i+"_front\">"
-  out+="\n\t\t\t<solid ref=\"solid_"+i+"_front\"/>"
-  out+="\n\t\t\t<position name=\"pos_"+i+"_front\" x=\"0\" y=\"0\" z=\""+str(-p["C_l_arm"]/2)+"\"/>"
-  out+="\n\t\t\t<rotation name=\"rot_"+i+"_front\" x=\"3*pi/2\" y=\"0\" z=\"0\"/>"
-  out+="\n\t\t</multiUnionNode>"
-  out+="\n\t\t<multiUnionNode name=\"node_solid_"+i+"_mid\">"
-  out+="\n\t\t\t<solid ref=\"solid_"+i+"_mid\"/>"
-  out+="\n\t\t\t<position name=\"pos_"+i+"_mid\" x=\"0\" y=\"0\" z=\""+str(-p["C_l_arm"]/2)+"\"/>"
-  out+="\n\t\t\t<rotation name=\"rot_"+i+"_mid\" x=\"pi/2\" y=\"0\" z=\"0\"/>"
-  out+="\n\t\t</multiUnionNode>"
-  out+="\n\t\t<multiUnionNode name=\"node_solid_"+i+"_back\">"
-  out+="\n\t\t\t<solid ref=\"solid_"+i+"_back\"/>"
-  out+="\n\t\t\t<position name=\"pos_"+i+"_back\" x=\""+str(p["C_x2_up"]-p["C_rad_back"]-p["C_rpos"])+"\" y=\"0\" z=\""+str(p["C_l_arm"]/2)+"\"/>"
-  out+="\n\t\t\t<rotation name=\"rot_"+i+"_back\" x=\"pi/2\" y=\"0\" z=\"0\"/>"
-  out+="\n\t\t</multiUnionNode>\n"
-  out+="\n\t</multiUnion>\n"
+  out+="\n\t<union name=\"node_solid_"+i+"_frontmid\">"
+  out+="\n\t\t<first ref=\"solid_"+i+"_front\"/>"
+  out+="\n\t\t<second ref=\"solid_"+i+"_mid\"/>"
+  out+="\n\t\t<position name=\"position_node_solid_"+i+"_frontmid\" y=\""+str(0)+"\"/>"
+  out+="\n\t\t<rotation name=\"rotation_node_solid_"+i+"_frontmid\" x=\"pi\"/>"
+  out+="\n\t</union>\n"
+
+  out+="\n\t<union name=\"solid_"+i+"\">"
+  out+="\n\t\t<first ref=\"node_solid_"+i+"_frontmid\"/>"
+  out+="\n\t\t<second ref=\"solid_"+i+"_back\"/>"
+  out+="\n\t\t<position name=\"position_node_solid_"+i+"\" x=\""+str( p["C_x2_up"]-p["C_rad_back"]-p["C_rpos"])+"\"  y=\""+str(-p["C_l_arm"])+"\"/>"
+  out+="\n\t\t<rotation name=\"rotation_node_solid_"+i+"\" x=\"-pi\"/>"
+  out+="\n\t</union>\n"
 
 
 ### Upstream toroid mother
@@ -174,11 +170,11 @@ for i in range(1,2):
         theta=2*(i-1)*math.pi/7
         xpos=rpos*(math.cos(theta))
         ypos=rpos*(math.sin(theta))
-        zpos= p["C_zpos"]
+        zpos= p["C_zpos"]-p["C_l_arm"]/2
         out+="\n\t\t<physvol name=\"ucoil_"+str(i)+"\">"
         out+="\n\t\t\t<volumeref ref=\"logic_outer_E_"+str(i)+"\"/>"
         out+="\n\t\t\t<position name=\"pos_ucoil_"+str(i)+"\" x=\""+str(xpos)+"\" y=\""+str(ypos)+"\" z=\""+str(zpos)+"\"/>"
-        out+="\n\t\t\t<rotation name=\"rot_ucoil_"+str(i)+"\" x=\"0\" y=\"0\" z=\""+str(-theta)+"\"/>"
+        out+="\n\t\t\t<rotation name=\"rot_ucoil_"+str(i)+"\" x=\"pi/2\" y=\"0\" z=\""+str(-theta)+"\"/>"
         out+="\n\t\t</physvol>\n"
 
 out+="\n\t</volume>\n"

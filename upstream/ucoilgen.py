@@ -34,10 +34,13 @@ p["C_zpos"]=p["C_z1_up"]+p["C_l_arm"]/2-7000   ## The 7000 needs to be the cente
 
 
 
-r_inner_mother=p["C_x1_low"]-2
-r_outer_mother=p["C_x2_up"]+2
+
+
+r_inner_mother=p["C_x1_low"]-2*p["E_dy"]-1
+r_outer_mother=p["C_x2_up"]+2*p["E_dy"]+1
 l_mother=2*( p["C_COM"] - p["C_z1_up"])+p["C_rad_front"]+p["C_rad_back"]+100
 
+print(p["C_rad_back"]-p["C_rad_front"])
 
 print(r_inner_mother)
 print(r_outer_mother)
@@ -160,12 +163,14 @@ for i in range(1,8):
         out+="\n\t</volume>\n"
 
 
+
 out+="\n\t<volume name=\"US_toroidMother\">"
 out+="\n\t\t<materialref ref=\"G4_Galactic\"/>"
 out+="\n\t\t<solidref ref=\"solid_US_toroidMother\"/>"
 out+="\n\t\t<auxiliary auxtype=\"Alpha\" auxvalue=\"0.0\"/>"
 
-for i in range(1,2):
+
+for i in range(1,8):
         rpos=p["C_rpos"]
         theta=2*(i-1)*math.pi/7
         xpos=rpos*(math.cos(theta))
@@ -174,7 +179,7 @@ for i in range(1,2):
         out+="\n\t\t<physvol name=\"ucoil_"+str(i)+"\">"
         out+="\n\t\t\t<volumeref ref=\"logic_outer_E_"+str(i)+"\"/>"
         out+="\n\t\t\t<position name=\"pos_ucoil_"+str(i)+"\" x=\""+str(xpos)+"\" y=\""+str(ypos)+"\" z=\""+str(zpos)+"\"/>"
-        out+="\n\t\t\t<rotation name=\"rot_ucoil_"+str(i)+"\" x=\"pi/2\" y=\"0\" z=\""+str(-theta)+"\"/>"
+        out+="\n\t\t\t<rotation name=\"rot_ucoil_"+str(i)+"\" x=\"pi/2\" y=\""+str(theta)+"\" z=\"0\"/>"
         out+="\n\t\t</physvol>\n"
 
 out+="\n\t</volume>\n"

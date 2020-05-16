@@ -43,9 +43,9 @@ for i in ["tb", "mid"]:
 print(p["C_COM"])
 p["C4_rpos"]= p["C4_mid_rpos"]
 p["C4_zpos"]= p["C4_mid_zpos"]
-
+p["C4_l_arm"]=p["C4_mid_l_arm"]
 r_inner_mother=p["C1_x1_low"]-2
-r_outer_mother=p["C4_mid_x2_up"]+2
+r_outer_mother=p["C4_mid_x2_up"]+10
 l_mother=2*( p["C_COM"] - p["C1_z1_up"])+p["C1_rad_front"]+p["C4_mid_rad_back"]+100
 
 
@@ -144,24 +144,22 @@ for j in range(1,4):
     out+="\n\t<tube name=\"solid_"+i+str(j)+"_front\" rmin=\"0\" rmax=\""+str(xoff[i+str(j)]+p["C"+str(j)+"_rad_front"])+"\" z=\""+str(2*yoff[i+str(j)]+p["C"+str(j)+"_dy"])+"\" startphi=\"0\" deltaphi=\"pi\" aunit=\"rad\" lunit=\"mm\"/>\n"
     out+="\n\t<tube name=\"solid_"+i+str(j)+"_back\" rmin=\"0\" rmax=\""+str(xoff[i+str(j)]+p["C"+str(j)+"_rad_back"])+"\" z=\""+str(2*yoff[i+str(j)]+p["C"+str(j)+"_dy"])+"\" startphi=\"0\" deltaphi=\"pi\" aunit=\"rad\" lunit=\"mm\"/>\n"
  
+  
     ### Making unions
-    out+="\n\t<multiUnion name=\"solid_"+i+str(j)+"\">"
-    out+="\n\t\t<multiUnionNode name=\"node_solid_"+i+str(j)+"_front\">"
-    out+="\n\t\t\t<solid ref=\"solid_"+i+str(j)+"_front\"/>"
-    out+="\n\t\t\t<position name=\"pos_"+i+str(j)+"_front\" x=\"0\" y=\"0\" z=\""+str(-p["C"+str(j)+"_l_arm"]/2)+"\"/>"
-    out+="\n\t\t\t<rotation name=\"rot_"+i+str(j)+"_front\" x=\"3*pi/2\" y=\"0\" z=\"0\"/>"
-    out+="\n\t\t</multiUnionNode>"
-    out+="\n\t\t<multiUnionNode name=\"node_solid_"+i+str(j)+"_mid\">"
-    out+="\n\t\t\t<solid ref=\"solid_"+i+str(j)+"_mid\"/>"
-    out+="\n\t\t\t<position name=\"pos_"+i+str(j)+"_mid\" x=\"0\" y=\"0\" z=\""+str(-p["C"+str(j)+"_l_arm"]/2)+"\"/>"
-    out+="\n\t\t\t<rotation name=\"rot_"+i+str(j)+"_mid\" x=\"pi/2\" y=\"0\" z=\"0\"/>"
-    out+="\n\t\t</multiUnionNode>"
-    out+="\n\t\t<multiUnionNode name=\"node_solid_"+i+str(j)+"_back\">"
-    out+="\n\t\t\t<solid ref=\"solid_"+i+str(j)+"_back\"/>"
-    out+="\n\t\t\t<position name=\"pos_"+i+str(j)+"_back\" x=\""+str(p["C"+str(j)+"_x2_up"]-p["C"+str(j)+"_rad_back"]-p["C"+str(j)+"_rpos"])+"\" y=\"0\" z=\""+str(p["C"+str(j)+"_l_arm"]/2)+"\"/>"
-    out+="\n\t\t\t<rotation name=\"rot_"+i+str(j)+"_back\" x=\"pi/2\" y=\"0\" z=\"0\"/>"
-    out+="\n\t\t</multiUnionNode>\n"
-    out+="\n\t</multiUnion>\n"
+    out+="\n\t<union name=\"node_solid_"+i+str(j)+"_frontmid\">"
+    out+="\n\t\t<first ref=\"solid_"+i+str(j)+"_front\"/>"
+    out+="\n\t\t<second ref=\"solid_"+i+str(j)+"_mid\"/>"
+    out+="\n\t\t<position name=\"position_node_solid_"+i+str(j)+"_frontmid\" y=\"0\"/>"
+    out+="\n\t\t<rotation name=\"rotation_node_solid_"+i+str(j)+"_frontmid\" x=\"pi\" />"
+    out+="\n\t</union>\n"
+
+    out+="\n\t\t<union name=\"solid_"+i+str(j)+"\">"
+    out+="\n\t\t\t<first ref=\"node_solid_"+i+str(j)+"_frontmid\"/>"
+    out+="\n\t\t\t<second ref=\"solid_"+i+str(j)+"_back\"/>"
+    out+="\n\t\t\t<position name=\"position_node_solid_"+i+str(j)+"\" x=\""+str(p["C"+str(j)+"_x2_up"]-p["C"+str(j)+"_rad_back"]-p["C"+str(j)+"_rpos"])+"\" y=\""+str(-p["C"+str(j)+"_l_arm"])+"\"/>"
+    out+="\n\t\t\t<rotation name=\"rotation_node_solid_"+i+str(j)+"_back\" x=\"-pi\" />"
+    out+="\n\t\t</union>\n"
+
 
 
 
@@ -196,25 +194,20 @@ for j in ["mid","tb"]:
     out+="\n\t<tube name=\"solid_"+i+str(j)+"_back\" rmin=\"0\" rmax=\""+str(xoff[i+str(j)]+p["C4_"+str(j)+"_rad_back"])+"\" z=\""+str(2*yoff[i+str(j)]+p["C4_"+str(j)+"_dy"])+"\" startphi=\"0\" deltaphi=\"pi\" aunit=\"rad\" lunit=\"mm\"/>\n"
  
     ### Making unions
-    out+="\n\t<multiUnion name=\"solid_"+i+str(j)+"\">"
-    out+="\n\t\t<multiUnionNode name=\"node_solid_"+i+str(j)+"_front\">"
-    out+="\n\t\t\t<solid ref=\"solid_"+i+str(j)+"_front\"/>"
-    out+="\n\t\t\t<position name=\"pos_"+i+str(j)+"_front\" x=\"0\" y=\"0\" z=\""+str(-p["C4_"+str(j)+"_l_arm"]/2)+"\"/>"
-    out+="\n\t\t\t<rotation name=\"rot_"+i+str(j)+"_front\" x=\"3*pi/2\" y=\"0\" z=\"0\"/>"
-    out+="\n\t\t</multiUnionNode>"
-    out+="\n\t\t<multiUnionNode name=\"node_solid_"+i+str(j)+"_mid\">"
-    out+="\n\t\t\t<solid ref=\"solid_"+i+str(j)+"_mid\"/>"
-    out+="\n\t\t\t<position name=\"pos_"+i+str(j)+"_mid\" x=\"0\" y=\"0\" z=\""+str(-p["C4_"+str(j)+"_l_arm"]/2)+"\"/>"
-    out+="\n\t\t\t<rotation name=\"rot_"+i+str(j)+"_mid\" x=\"pi/2\" y=\"0\" z=\"0\"/>"
-    out+="\n\t\t</multiUnionNode>"
-    out+="\n\t\t<multiUnionNode name=\"node_solid_"+i+str(j)+"_back\">"
-    out+="\n\t\t\t<solid ref=\"solid_"+i+str(j)+"_back\"/>"
-    out+="\n\t\t\t<position name=\"pos_"+i+str(j)+"_back\" x=\""+str(p["C4_"+str(j)+"_x2_up"]-p["C4_"+str(j)+"_rad_back"]-p["C4_"+str(j)+"_rpos"])+"\" y=\"0\" z=\""+str(p["C4_"+str(j)+"_l_arm"]/2)+"\"/>"
-    out+="\n\t\t\t<rotation name=\"rot_"+i+str(j)+"_back\" x=\"pi/2\" y=\"0\" z=\"0\"/>"
-    out+="\n\t\t</multiUnionNode>\n"
-    out+="\n\t</multiUnion>\n"
+    out+="\n\t<union name=\"node_solid_"+i+str(j)+"_frontmid\">"
+    out+="\n\t\t<first ref=\"solid_"+i+str(j)+"_front\"/>"
+    out+="\n\t\t\t<second ref=\"solid_"+i+str(j)+"_mid\"/>"
+    out+="\n\t\t\t<position name=\"position_node_solid_"+i+str(j)+"_frontmid\" x=\"0\" y=\"0\" z=\""+str(0)+"\"/>"
+    out+="\n\t\t\t<rotation name=\"rotation_node_solid_"+i+str(j)+"_frontmid\" x=\"pi\" y=\"0\" z=\"0\"/>"
+    out+="\n\t\t</union>\n"
 
-
+    out+="\n\t\t<union name=\"solid_"+i+str(j)+"\">"
+    out+="\n\t\t\t<first ref=\"node_solid_"+i+str(j)+"_frontmid\"/>"
+    out+="\n\t\t\t<second ref=\"solid_"+i+str(j)+"_back\"/>"
+    out+="\n\t\t\t<position name=\"position_node_solid_"+i+str(j)+"_back\" x=\""+str(p["C4_"+str(j)+"_x2_up"]-p["C4_"+str(j)+"_rad_back"]-p["C4_"+str(j)+"_rpos"])+"\" y=\""+str(-p["C4_"+str(j)+"_l_arm"])+"\"/>"
+    out+="\n\t\t\t<rotation name=\"rotation_node_solid_"+i+str(j)+"_back\" x=\"-pi\" y=\"0\" z=\"0\"/>"
+    out+="\n\t\t</union>\n"
+    
 
 pancake_solid={}
 pancake_ypos={}
@@ -222,29 +215,36 @@ pancake_zpos={}
 pancake_solid["top"]="tb"
 pancake_solid["mid"]="mid"
 pancake_solid["bot"]="tb"
-pancake_ypos["top"]=p["C4_mid_dy"]+p["E_mid_dy"]+p["E_tb_dy"]+p["C4_tb_dy"]/2+p["E_dy"]/2
-pancake_ypos["mid"]=0
-pancake_ypos["bot"]=-pancake_ypos["top"]
+pancake_zpos["top"]=p["C4_mid_dy"]+p["E_mid_dy"]+p["E_tb_dy"]+p["C4_tb_dy"]/2+p["E_dy"]/2
 pancake_zpos["mid"]=0
-pancake_zpos["top"]= abs(p["C4_tb_l_arm"]/2-p["C4_mid_l_arm"]/2)-abs(p["C4_mid_rad_front"]-p["C4_tb_rad_front"])
-pancake_zpos["bot"]=pancake_zpos["top"]
+pancake_zpos["bot"]=-pancake_zpos["top"]
+pancake_ypos["mid"]=0
+#pancake_ypos["top"]= abs(p["C4_tb_l_arm"]/2-p["C4_mid_l_arm"]/2)-abs(p["C4_mid_rad_front"]-p["C4_tb_rad_front"])
+
+
+
+pancake_ypos["top"]= p["C4_mid_rad_front"]-p["C4_tb_rad_front"]
+pancake_ypos["bot"]=pancake_ypos["top"]
 
 
 ##### Making the outer logical volume for coil 4
 out+="\n\t<union name=\"solid_outer_E4_submodule\">"
 out+="\n\t\t<first ref=\"solid_outer_E4_mid\"/>"
 out+="\n\t\t<second ref=\"solid_outer_E4_tb\"/>"
-out+="\n\t\t<position name=\"position\"  x=\""+str(0)+"\" y=\""+str(pancake_ypos["top"])+"\" z=\""+str(pancake_zpos["top"])+"\" unit=\"mm\"/>"
+out+="\n\t\t<position name=\"position\"  x=\""+str(0)+"\" y=\""+str(pancake_ypos["top"])+"\" z=\""+str(pancake_zpos["top"])+"\"/>"
 out+="\n\t</union>"
 
 
 out+="\n\t<union name=\"solid_outer_E4\">"
 out+="\n\t\t<first ref=\"solid_outer_E4_submodule\"/>"
 out+="\n\t\t<second ref=\"solid_outer_E4_tb\"/>"
-out+="\n\t\t<position name=\"position\"  x=\""+str(0)+"\" y=\""+str(pancake_ypos["bot"])+"\" z=\""+str(pancake_zpos["top"])+"\" unit=\"mm\"/>"
+out+="\n\t\t<position name=\"position\"  x=\""+str(0)+"\" y=\""+str(pancake_ypos["bot"])+"\" z=\""+str(pancake_zpos["bot"])+"\"/>"
 out+="\n\t</union>"
 
 
+
+
+print("offset:" +str(pancake_ypos["top"])+"\n")
 
 
 ### Downstream toroid mother
@@ -307,14 +307,16 @@ for i in range(1,8):
    realsol["topmid"]="mid"
    realsol["botmid"]="mid"
    realsol["bot"]="tb"
-   realypos["top"]=p["C4_mid_dy"]+p["E_mid_dy"]+p["E_tb_dy"]+p["C4_tb_dy"]/2
-   realypos["topmid"]=p["C4_mid_dy"]/2+p["E_mid_dy"]
-   realypos["botmid"]=-realypos["topmid"]
-   realypos["bot"]= -realypos["top"]
-   realzpos["topmid"]=0
-   realzpos["botmid"]=0
-   realzpos["top"]=   abs(p["C4_tb_l_arm"]/2-p["C4_mid_l_arm"]/2)-abs(p["C4_mid_rad_front"]-p["C4_tb_rad_front"])
-   realzpos["bot"]=realzpos["top"]
+   realzpos["top"]=p["C4_mid_dy"]+p["E_mid_dy"]+p["E_tb_dy"]+p["C4_tb_dy"]/2
+   realzpos["topmid"]=p["C4_mid_dy"]/2+p["E_mid_dy"]
+   realzpos["botmid"]=-realzpos["topmid"]
+   realzpos["bot"]= -realzpos["top"]
+   realypos["topmid"]=0
+   realypos["botmid"]=0
+ #  realypos["top"]=   abs(p["C4_tb_l_arm"]/2-p["C4_mid_l_arm"]/2)-abs(p["C4_mid_rad_front"]-p["C4_tb_rad_front"])
+   realypos["top"]= p["C4_mid_rad_front"]-p["C4_tb_rad_front"]
+
+   realypos["bot"]=realypos["top"]
 
 
    for j in ["top", "topmid", "botmid", "bot"]:
@@ -363,17 +365,19 @@ out+="\n\t\t<materialref ref=\"G4_Galactic\"/>"
 out+="\n\t\t<solidref ref=\"solid_DS_toroidMother\"/>"
 out+="\n\t\t<auxiliary auxtype=\"Alpha\" auxvalue=\"0.0\"/>"
 
+
 for i in range(1,8):
    for j in range(1,5):
         rpos=p["C"+str(j)+"_rpos"]
         theta=2*(i-1)*math.pi/7
         xpos=rpos*(math.cos(theta))
         ypos=rpos*(math.sin(theta))
-        zpos= p["C"+str(j)+"_zpos"]
+        zpos= p["C"+str(j)+"_zpos"]- p["C"+str(j)+"_l_arm"]/2
+
         out+="\n\t\t<physvol name=\"dcoil"+str(j)+"_"+str(i)+"\">"
         out+="\n\t\t\t<volumeref ref=\"logic_outer_E"+str(j)+"_"+str(i)+"\"/>"
         out+="\n\t\t\t<position name=\"pos_dcoil"+str(j)+"_"+str(i)+"\" x=\""+str(xpos)+"\" y=\""+str(ypos)+"\" z=\""+str(zpos)+"\"/>"
-        out+="\n\t\t\t<rotation name=\"rot_dcoil"+str(j)+"_"+str(i)+"\" x=\"0\" y=\"0\" z=\""+str(-theta)+"\"/>"
+        out+="\n\t\t\t<rotation name=\"rot_dcoil"+str(j)+"_"+str(i)+"\" x=\"pi/2\" y=\""+str(theta)+"\" z=\""+str(0)+"\"/>"
         out+="\n\t\t</physvol>\n"
 
 

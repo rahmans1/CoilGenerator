@@ -34,10 +34,8 @@ p["C_zpos"]=p["C_z1_up"]+p["C_l_arm"]/2-7000   ## The 7000 needs to be the cente
 
 
 
-
-
-r_inner_mother=p["C_x1_low"]-2*p["E_dy"]-1
-r_outer_mother=p["C_x2_up"]+2*p["E_dy"]+1
+r_inner_mother=p["C_x1_low"]-p["E_dy"]-0.01
+r_outer_mother=p["C_x2_up"]+p["E_dy"]+1
 l_mother=2*( p["C_COM"] - p["C_z1_up"])+p["C_rad_front"]+p["C_rad_back"]+100
 
 print(p["C_rad_back"]-p["C_rad_front"])
@@ -121,9 +119,22 @@ for i in ["C", "outer_E","inner_E"]:
   out+="\n\t</union>\n"
 
 
-### Upstream toroid mother
-out+="\n\t<tube name=\"solid_US_toroidMother\" rmin=\""+str(r_inner_mother)+"\"  rmax=\""+str(r_outer_mother)+"\" z=\""+str(l_mother)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n"
 
+
+### Upstream toroid mother
+
+
+
+
+
+
+
+out+="\n\t<cone name=\"solid_US_toroidMother\" rmin1=\""+str(r_inner_mother)+"\"  rmax1=\""+str(r_outer_mother)+"\" rmin2=\""+str(r_inner_mother+(p["C_x2_low"]-p["C_x1_low"])/16)+"\" rmax2=\""+str(r_outer_mother)+"\" z=\""+str(l_mother)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n"
+
+
+
+
+print(str(r_inner_mother+(p["C_x2_low"]-p["C_x1_low"])/12))
 
 out+="\n</solids>\n"
 

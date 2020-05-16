@@ -141,7 +141,8 @@ out+="\n\t</union>\n"
 
 
 
-out+="\t<cone name=\"solid_showerMaxMother\" rmin1=\""+str(600)+"\"  rmax1=\""+str(1900)+"\" rmin2=\""+str(600)+"\" rmax2=\""+str(1900)+"\"  z=\""+str(len_mother)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n" #Make sure this mother volume doesn't interfere with coils
+
+out+="\t<cone name=\"solid_showerMaxMother\" rmin1=\""+str(700)+"\"  rmax1=\""+str(1900)+"\" rmin2=\""+str(700)+"\" rmax2=\""+str(1900)+"\"  z=\""+str(len_mother)+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n" #Make sure this mother volume doesn't interfere with coils
 out+="</solids>\n"
 
 

@@ -23,6 +23,26 @@ with open(args.par_list) as csvfile:
 
 p["C_COM"]=(p["C1_z2_up"]-p["C1_z1_up"])/2 +p["C1_z1_up"]
 
+### Creating dummy variables for the coils nested inside the outermost coil in the middle of the sandwich
+
+for i in range(1,26):
+  p["C2_z"+str(i)+"_up"]=  p["C1_z"+str(i)+"_up"]
+  p["C3_z"+str(i)+"_up"]=  p["C1_z"+str(i)+"_up"]
+  p["C4_z"+str(i)+"_up"]=  p["C1_z"+str(i)+"_up"]
+  p["C2_x"+str(i)+"_up"]=  p["C1_x"+str(i)+"_up"]
+  p["C3_x"+str(i)+"_up"]=  p["C1_x"+str(i)+"_up"]
+  p["C4_x"+str(i)+"_up"]=  p["C1_x"+str(i)+"_up"]
+  
+
+
+for i in range(1,8):
+  p["C2_z"+str(i)+"_low"]=  p["C1_z"+str(i)+"_low"]
+  p["C3_z"+str(i)+"_low"]=  p["C1_z"+str(i)+"_low"]
+  p["C4_z"+str(i)+"_low"]=  p["C1_z"+str(i)+"_low"]
+  p["C2_x"+str(i)+"_low"]=  p["C1_x"+str(i)+"_low"]
+  p["C3_x"+str(i)+"_low"]=  p["C1_x"+str(i)+"_low"]
+  p["C4_x"+str(i)+"_low"]=  p["C1_x"+str(i)+"_low"]
+
 sign={}
 sign["up"]=1
 sign["low"]=-1
@@ -30,24 +50,33 @@ sign["low"]=-1
 for i in ["up", "low"]:
   p["C2_z1_"+i]=p["C1_z3_"+i]
   p["C3_z1_"+i]=p["C1_z4_"+i]
+  p["C4_z1_"+i]=p["C1_z5_"+i]
 
   p["C2_x1_"+i]=p["C1_x3_"+i]-sign[i]*(p["C1_dx"]+p["xgap"])
   p["C3_x1_"+i]=p["C1_x4_"+i]-sign[i]*(p["C1_dx"]+p["C2_dx"]-2*p["xgap"])
+  ### This is a special case. The lower end of C4 doesn't match the lower end of the middle of the sandwich.
+  if i=="up":
+    p["C4_x1_"+i]=p["C1_x5_"+i]
+  else:
+    p["C4_x1_"+i]=p["C1_x5_"+i]+p["C4_x1_off"]
 
 
   p["C2_z2_"+i]= p["C1_z2_"+i]
   p["C3_z2_"+i]=p["C1_z2_"+i]
+  p["C4_z2_"+i]=p["C1_z2_"+i]
 
   p["C2_x2_"+i]=p["C1_x2_"+i]-sign[i]*(p["C1_dx"]+p["xgap"])
   p["C3_x2_"+i]=p["C1_x2_"+i]-sign[i]*(p["C1_dx"]+p["C2_dx"]-2*p["xgap"])
+  p["C4_x2_"+i]=p["C1_x2_"+i]
+  
 
 
-for i in range(1,4):
+for i in range(1,5):
 
   p["C"+str(i)+"_l_arm"]= p["C"+str(i)+"_z2_up"]-p["C"+str(i)+"_z1_up"]
   p["C"+str(i)+"_rad_front"]= (p["C"+str(i)+"_x1_up"]-p["C"+str(i)+"_x1_low"])/2.0
   p["C"+str(i)+"_rad_back"]= (p["C"+str(i)+"_x2_up"]-p["C"+str(i)+"_x2_low"])/2.0
-  p["C"+str(i)+"_rpos"]=p["C1_x1_low"]+ p["C1_rad_front"]
+  p["C"+str(i)+"_rpos"]=p["C"+str(i)+"_x1_low"]+ p["C"+str(i)+"_rad_front"]
   p["C"+str(i)+"_zpos"]=p["C"+str(i)+"_z1_up"]+p["C"+str(i)+"_l_arm"]/2-p["C_COM"]  
 
 
@@ -133,7 +162,10 @@ out+="\n\t</xtru>\n"
 
 
 
+
 epoxy=[p["E_dy"], p["xgap"], p["xgap"]]
+upstart=[3,4,5]
+
 for j in range(1,4):
   xoff={}
   yoff={}
@@ -148,8 +180,15 @@ for j in range(1,4):
   for i in ["C", "outer_E","inner_E"]: 
     out+="\n\t<xtru name=\"solid_"+i+str(j)+"_mid\"  lunit=\"mm\">"
     out+="\n\t\t<twoDimVertex x=\""+str(xoff[i+str(j)]+ p["C"+str(j)+"_x2_up"]-p["C"+str(j)+"_rpos"])+"\" y=\""+str(p["C"+str(j)+"_z2_up"]-p["C"+str(j)+"_z1_up"])+"\" />"
+
+
+    for k in reversed(range(upstart[j-1],26)):
+       out+="\n\t\t<twoDimVertex x=\""+str(xoff[i+str(j)]+ p["C"+str(j)+"_x"+str(k)+"_up"]-p["C"+str(j)+"_rpos"])+"\" y=\""+str(p["C"+str(j)+"_z"+str(k)+"_up"]-p["C"+str(j)+"_z1_up"])+"\" />"
     out+="\n\t\t<twoDimVertex x=\""+str(xoff[i+str(j)]+ p["C"+str(j)+"_x1_up"]-p["C"+str(j)+"_rpos"])+"\" y=\""+str(p["C"+str(j)+"_z1_up"]-p["C"+str(j)+"_z1_up"])+"\" />"
     out+="\n\t\t<twoDimVertex x=\""+str(-xoff[i+str(j)]+ p["C"+str(j)+"_x1_low"]-p["C"+str(j)+"_rpos"])+"\" y=\""+str(p["C"+str(j)+"_z1_low"]-p["C"+str(j)+"_z1_up"])+"\" />"
+    for k in range(upstart[j-1],8):
+      out+="\n\t\t<twoDimVertex x=\""+str(-xoff[i+str(j)]+ p["C"+str(j)+"_x"+str(k)+"_low"]-p["C"+str(j)+"_rpos"])+"\" y=\""+str(p["C"+str(j)+"_z"+str(k)+"_low"]-p["C"+str(j)+"_z1_up"])+"\" />"
+
     out+="\n\t\t<twoDimVertex x=\""+str(-xoff[i+str(j)]+ p["C"+str(j)+"_x2_low"]-p["C"+str(j)+"_rpos"])+"\" y=\""+str(p["C"+str(j)+"_z2_low"]-p["C"+str(j)+"_z1_up"])+"\" />"
     out+="\n\t\t<section zOrder=\"1\" zPosition=\""+str(-yoff[i+str(j)]-p["C"+str(j)+"_dy"]/2)+"\"/>"
     out+="\n\t\t<section zOrder=\"2\" zPosition=\""+str(yoff[i+str(j)]+p["C"+str(j)+"_dy"]/2)+"\"/>"
@@ -182,6 +221,7 @@ out+="\n\t<tube name=\"solid_DS_toroidMother\" rmin=\""+str(r_inner_mother)+"\" 
 out+="\n</solids>\n"
 
 out+="\n\n<structure>\n"
+
 
 for i in range(1,8):
    #Setting up photon collimator
@@ -233,6 +273,10 @@ for i in range(1,8):
    out+="\n\t\t<auxiliary auxtype=\"Color\" auxvalue=\"orange\"/>"
    out+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"
    out+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(3007+i)+"\"/>"
+   out+="\n\t\t\t<physvol name=\"C2\">"
+   out+="\n\t\t\t\t<volumeref ref=\"logic_outer_E2_"+str(i)+"\"/>"
+   out+="\n\t\t\t\t<position name=\"pos_C2_"+str(i)+"\" x=\""+str(p["C2_rpos"]-p["C1_rpos"])+"\" y=\""+str(-p["C2_zpos"])+"\"/>"
+   out+="\n\t\t\t</physvol>\n"
    out+="\n\t</volume>\n"
 
    out+="\n\t<volume name=\"logic_C"+str(i)+"\">"
@@ -332,7 +376,8 @@ out+="\n\t\t<solidref ref=\"solid_DS_toroidMother\"/>"
 out+="\n\t\t<auxiliary auxtype=\"Alpha\" auxvalue=\"0.0\"/>"
 
 
-for i in range(1,8):
+
+for i in range(1,2):
    rpos=p["C1_rpos"]
    theta=2*(i-1)*math.pi/7
    xpos=rpos*(math.cos(theta))

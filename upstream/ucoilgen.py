@@ -36,7 +36,7 @@ p["C_zpos"]=p["C_z1_up"]+p["C_l_arm"]/2-7000   ## The 7000 needs to be the cente
 
 r_inner_mother=p["C_x1_low"]-p["E_dy"]-0.01
 r_outer_mother=p["C_x2_up"]+p["E_dy"]+1
-l_mother=2*( p["C_COM"] - p["C_z1_up"])+p["C_rad_front"]+p["C_rad_back"]+100
+l_mother=2*( p["C_COM"] - p["C_z1_up"])+p["C_rad_front"]+p["C_rad_back"]+48
 
 print(p["C_rad_back"]-p["C_rad_front"])
 
@@ -139,6 +139,7 @@ print(str(r_inner_mother+(p["C_x2_low"]-p["C_x1_low"])/12))
 out+="\n</solids>\n"
 
 out+="\n\n<structure>\n"
+
 
 for i in range(1,8):
    ### Setting up coils

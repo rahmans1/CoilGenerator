@@ -49,9 +49,11 @@ r_outer_mother=p["C4_mid_x2_up"]+10
 l_mother=2*( p["C_COM"] - p["C1_z1_up"])+p["C1_rad_front"]+p["C4_mid_rad_back"]+100
 
 
+print("COM: "+str(p["C_COM"]))
 print(r_inner_mother)
 print(r_outer_mother)
 print(l_mother)
+print("Offset from center of mass: "+ str((-p["C1_rad_front"]+p["C4_mid_rad_back"])/2))
 
 
 # photon collimator

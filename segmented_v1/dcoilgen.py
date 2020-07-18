@@ -44,7 +44,7 @@ print(p["C_COM"])
 p["C4_rpos"]= p["C4_mid_rpos"]
 p["C4_zpos"]= p["C4_mid_zpos"]
 p["C4_l_arm"]=p["C4_mid_l_arm"]
-r_inner_mother=p["C1_x1_low"]-2
+r_inner_mother=0#p["C1_x1_low"]-2
 r_outer_mother=p["C4_mid_x2_up"]+10
 l_mother=2*( p["C_COM"] - p["C1_z1_up"])+p["C1_rad_front"]+p["C4_mid_rad_back"]+100
 
@@ -55,6 +55,9 @@ print(r_outer_mother)
 print(l_mother)
 print("Offset from center of mass: "+ str((-p["C1_rad_front"]+p["C4_mid_rad_back"])/2))
 
+
+
+print("Upstream end of mother volume: "+ str((-l_mother/2+p["C_COM"])))
 
 # photon collimator
 r_inner_photon=74.22
@@ -67,6 +70,15 @@ r_extent_sub_photon=r_outer_photon-r_inner_sub_photon
 h_inner_sub_photon=2*12.75
 h_outer_sub_photon=2*29.15
 t_photon=70
+
+# septapus shield
+dx_septapus=6
+dy_septapus=24
+r_start_septapus= 35
+r_end_septapus= 45
+z_start_septapus=p["C1_z1_low"]
+dz_septapus= 3500
+
 
 
 
@@ -122,6 +134,19 @@ out+="\n\t\t<section zOrder=\"1\" zPosition=\""+str(-t_photon/2)+"\" xOffset=\"0
 out+="\n\t\t<section zOrder=\"2\" zPosition=\""+str(t_photon/2)+"\" xOffset=\"0\" yOffset=\"0\" scalingFactor=\"1\"/>"
 out+="\n\t</xtru>\n"
 
+
+#septapus arm solid
+out+="\n\t<xtru name=\"solid_septapus_arm\" lunit=\"mm\">"
+out+="\n\t\t<twoDimVertex x=\""+str(-dx_septapus/2)+"\" y=\""+str(dy_septapus/2)+"\"/>"
+out+="\n\t\t<twoDimVertex x=\""+str(-dx_septapus/2)+"\" y=\""+str(-dy_septapus/2)+"\"/>"
+out+="\n\t\t<twoDimVertex x=\""+str(dx_septapus/2)+"\" y=\""+str(-dy_septapus/2)+"\"/>"
+out+="\n\t\t<twoDimVertex x=\""+str(dx_septapus/2)+"\" y=\""+str(dy_septapus/2)+"\"/>"
+out+="\n\t\t<section zOrder=\"1\" zPosition=\""+str(0)+"\" xOffset=\"0\" yOffset=\"0\" scalingFactor=\"1\"/>"
+out+="\n\t\t<section zOrder=\"2\" zPosition=\""+str(dz_septapus)+"\" xOffset=\""+str(r_end_septapus-r_start_septapus)+"\" yOffset=\"0\" scalingFactor=\"1\"/>"
+out+="\n\t</xtru>\n"
+
+#septapus tube
+out+="\n\t<tube name=\"solid_septapus_tube\" rmin=\""+str(r_start_septapus-dx_septapus/2)+"\"  rmax=\""+str(r_start_septapus+dx_septapus/2)+"\" z=\""+str(l_mother/2+(z_start_septapus-p["C_COM"]))+"\" startphi=\"0\" deltaphi=\"360\" aunit=\"deg\" lunit=\"mm\"/>\n"
 
 
 
@@ -257,6 +282,14 @@ out+="\n</solids>\n"
 
 out+="\n\n<structure>\n"
 
+
+out+="\n\t<volume name=\"logic_septapus_tube\">"
+out+="\n\t\t<materialref ref=\"G4_W\"/>"
+out+="\n\t\t<solidref ref=\"solid_septapus_tube\"/>"
+out+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"
+out+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(56)+"\"/>"
+out+="\n\t</volume>\n"
+
 for i in range(1,8):
    #Setting up photon collimator
    out+="\n\t<volume name=\"logic_photon_collimator_"+str(i)+"\">"
@@ -264,6 +297,13 @@ for i in range(1,8):
    out+="\n\t\t<solidref ref=\"solid_photon_collimator\"/>"
    out+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"
    out+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(2005)+"\"/>"
+   out+="\n\t</volume>\n"
+
+   out+="\n\t<volume name=\"logic_septapus_arm_"+str(i)+"\">"
+   out+="\n\t\t<materialref ref=\"G4_W\"/>"
+   out+="\n\t\t<solidref ref=\"solid_septapus_arm\"/>"
+   out+="\n\t\t<auxiliary auxtype=\"SensDet\" auxvalue=\"coilDet\"/>"
+   out+="\n\t\t<auxiliary auxtype=\"DetNo\" auxvalue=\""+str(56)+"\"/>"
    out+="\n\t</volume>\n"
 
 
@@ -394,6 +434,25 @@ for i in range(1,8):
    out+="\n\t\t\t<position name=\"pos_photon_collimator_"+str(i)+"\" x=\""+str(xpos)+"\" y=\""+str(ypos)+"\" z=\""+str(zpos)+"\"/>"
    out+="\n\t\t\t<rotation name=\"rot_photon_collimator_"+str(i)+"\" x=\""+str(0)+"\" y=\"0\" z=\""+str(-theta)+"\"/>"
    out+="\n\t\t</physvol>\n"
+
+   rpos=r_start_septapus
+   theta=2*i*math.pi/7
+   xpos=rpos*(math.cos(theta))
+   ypos=rpos*(math.sin(theta))
+   zpos=z_start_septapus-p["C_COM"]
+   print(rpos)
+   out+="\n\t\t<physvol name=\"septapus_arm_"+str(i)+"\">"
+   out+="\n\t\t\t<volumeref ref=\"logic_septapus_arm_"+str(i)+"\"/>"
+   out+="\n\t\t\t<position name=\"pos_septapus_arm_"+str(i)+"\" x=\""+str(xpos)+"\" y=\""+str(ypos)+"\" z=\""+str(zpos)+"\"/>"
+   out+="\n\t\t\t<rotation name=\"rot_septapus_arm_"+str(i)+"\" x=\""+str(0)+"\" y=\"0\" z=\""+str(-theta)+"\"/>"
+   out+="\n\t\t</physvol>\n"
+
+
+out+="\n\t\t<physvol name=\"septapus_tube\">"
+out+="\n\t\t\t<volumeref ref=\"logic_septapus_tube\"/>"
+out+="\n\t\t\t<position name=\"pos_septapus_tube\" x=\""+str(0)+"\" y=\""+str(0)+"\" z=\""+str(z_start_septapus-p["C_COM"]-((z_start_septapus-p["C_COM"])+l_mother/2)/2)+"\"/>"
+out+="\n\t\t</physvol>\n"
+
 
 
 

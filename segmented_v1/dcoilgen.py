@@ -72,12 +72,12 @@ h_outer_sub_photon=2*29.15
 t_photon=70
 
 # septapus shield
-dx_septapus=6
-dy_septapus=28  #24  Widening the septapus shield azimuthally
-r_start_septapus= 35
-r_end_septapus= 46  # 45 Lifting the shield up by a mm
+dx_septapus=6.0
+dy_septapus=6.0  #18 24  Widening the septapus shield azimuthally
+r_start_septapus= 35.0
+r_end_septapus= 46.0  # 45 Lifting the shield up by a mm
 z_start_septapus=p["C1_z1_low"]
-dz_septapus= 3500
+dz_septapus= 3500.0
 
 
 

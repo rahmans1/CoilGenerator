@@ -19,7 +19,7 @@ thick_mirror_box_tungstenquartz=4*(thick_quartz+thick_tungsten)
 
 ###  width
 
-width_quartz=238#246.888 
+width_quartz=265#238#246.888
 width_tungsten=width_quartz
 width_mirror_box_tungstenquartz=width_quartz
 
@@ -60,13 +60,13 @@ print(932.5+length_quartz+length_logic_mirror_box)
 
 zstagger=(thick_mirror_box_bot+2.0*thick_wall_mirror_box_tungstenquartz)/2-36.243-10 # FIX ME: Hard Code this and chcheck for overlaps
 print(zstagger)
-print(23000-2*(thick_quartz+thick_tungsten)+zstagger)
-print(23000-2*(thick_quartz+thick_tungsten)-zstagger)
+print(24498-2*(thick_quartz+thick_tungsten)+zstagger)
+print(24498-2*(thick_quartz+thick_tungsten)-zstagger)
 
 len_mother=2*thick_mirror_box_bot+2*zstagger+5
 
 z_origin = 0
-pos=932.5+length_quartz/2
+pos=1020.0+length_quartz/2
 
 f=open(output_file+".gdml", "w+")
 

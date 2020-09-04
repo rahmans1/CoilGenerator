@@ -19,7 +19,7 @@ thick_mirror_box_tungstenquartz=4*(thick_quartz+thick_tungsten)
 
 ###  width
 
-width_quartz=265#238#246.888
+width_quartz=265.0#238.0#246.888 # must be float
 width_tungsten=width_quartz
 width_mirror_box_tungstenquartz=width_quartz
 
